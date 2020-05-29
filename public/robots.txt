@@ -1,0 +1,5 @@
+User-agent: AhrefsBot
+User-agent: Ezooms
+User-agent: MJ12bot
+User-agent: XoviBot
+Disallow: /
