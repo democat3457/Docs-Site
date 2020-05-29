@@ -1,5 +1,6 @@
 #!/bin/bash
 
 git pull
+npm i
 npm run-script build
 pm2 restart ecosystem.config.js
