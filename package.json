@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 2901",
     "fast-dev": "cross-env NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV=false next build && next start",
     "serve": "cross-env NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV=true next build && next start"
   },
