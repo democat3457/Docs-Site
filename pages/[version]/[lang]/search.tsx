@@ -53,7 +53,7 @@ const Search = ({ theme, version, lang, navs, verlang }: SearchProps) => {
                 <div>
                   {searchResults.count > 0 ? searchResults.results.map((value, index) =>
 
-                    <Link href = {`/[version]/[lang]/[...slug]`} as = {value.location.replace(/\.md/, "")} key = {`${index}`}>
+                    <Link href = {`/[version]/[lang]/[...slug]`} as = {(value.location.startsWith("/") ? value.location.substring(1) : value.location).replace(/\.md/, "")} key = {`${index}`}>
 
                       <a className = {`px-2 block hover:bg-gray-400 dark-hover:bg-dark-700`}>
 
