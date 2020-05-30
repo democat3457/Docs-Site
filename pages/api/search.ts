@@ -79,7 +79,7 @@ module.exports = async (req: NextApiRequest, res: NextApiResponse) => {
         limit--;
       }
       let doc = documents[results[index].ref];
-      doc.location = url.parse(`/${version}/${lang}${doc.location.startsWith(`/`) ? `/` : ``}${doc.location}`).pathname;
+      doc.location = url.parse(`/${version}/${lang}${doc.location.startsWith(`/`) ? `` : `/`}${doc.location}`).pathname;
       returned.push(doc);
     } else {
       break;
