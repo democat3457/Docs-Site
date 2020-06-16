@@ -68,8 +68,13 @@ export interface PageQuery extends HasVerAndLang {
   slug: string[]
 }
 
+export interface SearchPageQuery extends HasVerAndLang{
+  search: string
+}
+
 export interface SearchProps extends HasVerAndLang, HasTheme, HasVerLang {
   navs: object
+  search: string
 }
 
 export interface SearchResults {

@@ -6,23 +6,41 @@ import yaml from 'yaml';
 import Layout from "../../../components/layout";
 import axios from "axios";
 import Link from "next/link";
-import { PageQuery, SearchProps, SearchResults } from "../../../utils/Interfaces";
+import { PageQuery, SearchPageQuery, SearchProps, SearchResults } from "../../../utils/Interfaces";
 import { NextPageContext } from "next";
 import { DOCS_DEV, getTheme } from "../../../utils/Utils";
 import SideNav from "../../../components/SideNav";
+import { useRouter } from "next/router";
 
-const Search = ({ theme, version, lang, navs, verlang }: SearchProps) => {
+const Search = ({ theme, version, lang, navs, verlang, search }: SearchProps) => {
+  const [displayedSearch, setDisplayedSearch] = useState(search);
   const [showingNav, setShowingNav] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResults>({
     count: -1,
     totalCount: 0,
     results: []
   });
+  const router = useRouter();
   useEffect(() => {
     setShowingNav(false);
   }, []);
+  useEffect(() => {
+    if (search.length < 3) {
+      setSearchResults({
+        count: -1,
+        totalCount: 0,
+        results: []
+      });
+      return;
+    }
+    axios.get(`/api/search?v=${version}&lang=${lang}&q=${search}&limit=5000`).then(value => {
+      setSearchResults(value.data);
+    }).catch(reason => {
+      console.log(reason);
+    });
+  }, [search])
   return (
-    <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {{key: "Search", value: "Search"}}>
+    <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {{ key: "Search", value: "Search" }}>
       <div className = "flex flex-row">
         <SideNav version = {version} lang = {lang} navs = {navs} current = {{
           key: "search",
@@ -33,21 +51,14 @@ const Search = ({ theme, version, lang, navs, verlang }: SearchProps) => {
             <div className = "container mx-auto text-center mt-1 dark:text-dark-100 py-4">
               <div className = {`w-5/6 mx-auto`}>
                 <label className = "text-4xl" htmlFor = "main-search">Search</label>
-                <input disabled={DOCS_DEV} id = "main-search" className = "bg-transparent block w-full p-2 border border-gray-400 dark:border-dark-600" onChange = {(event) => {
+                <input disabled = {DOCS_DEV} id = "main-search" className = "bg-transparent block w-full p-2 border border-gray-400 dark:border-dark-600" onChange = {(event) => {
+                  setDisplayedSearch((event.target.value));
+
                   if (event.target.value.length < 3) {
-                    setSearchResults({
-                      count: -1,
-                      totalCount: 0,
-                      results: []
-                    });
-                    return;
+                    router.push(`/[version]/[lang]/search/`, `/${version}/${lang}/search/`, { shallow: false });
                   }
-                  axios.get(`/api/search?v=${version}&lang=${lang}&q=${event.target.value}&limit=5000`).then(value => {
-                    setSearchResults(value.data);
-                  }).catch(reason => {
-                    console.log(reason);
-                  });
-                }}/>
+                  router.push(`/[version]/[lang]/search/?search=${event.target.value}`, `/${version}/${lang}/search/?search=${event.target.value}`, { shallow: false });
+                }} value = {displayedSearch}/>
 
 
                 <div>
@@ -86,15 +97,15 @@ const Search = ({ theme, version, lang, navs, verlang }: SearchProps) => {
 export async function getServerSideProps(context: NextPageContext) {
   let { pageTheme, hljsStyle } = getTheme(context);
 
-  let { lang, version } = context.query as unknown as PageQuery;
+  let { lang, version, search = "" } = context.query as unknown as SearchPageQuery;
 
   let docsDir = path.join(process.cwd(), 'docs');
   let versionDir = path.join(docsDir, version);
   let langDir = path.join(versionDir, lang);
   if (context.req && context.res) {
-    if (context.req.url && !context.req.url.endsWith("/")) {
+    if (context.req.url && !context.req.url.endsWith("/") && context.req.url.indexOf(`?`) === -1) {
       context.res.writeHead(301, {
-        Location: context.req.url + "/",
+        Location: context.req.url + "/" + (search.length ? `?search=${search}` : ``),
         // Add the content-type for SEO considerations
         'Content-Type': 'text/html; charset=utf-8',
       })
@@ -135,7 +146,8 @@ export async function getServerSideProps(context: NextPageContext) {
       version: version,
       lang: lang,
       navs: yml,
-      verlang
+      verlang,
+      search
     },
   }
 }
