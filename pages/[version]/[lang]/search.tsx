@@ -4,41 +4,21 @@ import React, { useEffect, useState } from "react";
 import SimpleBar from 'simplebar-react';
 import yaml from 'yaml';
 import Layout from "../../../components/layout";
-import axios from "axios";
 import Link from "next/link";
-import { PageQuery, SearchPageQuery, SearchProps, SearchResults } from "../../../utils/Interfaces";
+import { SearchPageQuery, SearchProps, SearchResults } from "../../../utils/Interfaces";
 import { NextPageContext } from "next";
 import { DOCS_DEV, getTheme } from "../../../utils/Utils";
 import SideNav from "../../../components/SideNav";
 import { useRouter } from "next/router";
+import axios from 'axios';
 
-const Search = ({ theme, version, lang, navs, verlang, search }: SearchProps) => {
+const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: SearchProps) => {
   const [displayedSearch, setDisplayedSearch] = useState(search);
   const [showingNav, setShowingNav] = useState(false);
-  const [searchResults, setSearchResults] = useState<SearchResults>({
-    count: -1,
-    totalCount: 0,
-    results: []
-  });
   const router = useRouter();
   useEffect(() => {
     setShowingNav(false);
   }, []);
-  useEffect(() => {
-    if (search.length < 3) {
-      setSearchResults({
-        count: -1,
-        totalCount: 0,
-        results: []
-      });
-      return;
-    }
-    axios.get(`/api/search?v=${version}&lang=${lang}&q=${search}&limit=5000`).then(value => {
-      setSearchResults(value.data);
-    }).catch(reason => {
-      console.log(reason);
-    });
-  }, [search])
   return (
     <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {{ key: "Search", value: "Search" }}>
       <div className = "flex flex-row">
@@ -137,6 +117,18 @@ export async function getServerSideProps(context: NextPageContext) {
       verlang[version] = fs.readdirSync(path.join(docsDir, version));
     }
   }
+  let searchResults: SearchResults = {
+    count: -1,
+    totalCount: 0,
+    results: []
+  }
+  if (search.length >= 3) {
+    // Forcing https isn't ideal, but no way to figure the protocol out, and SSL should be standard.
+    let response = await axios.get(`https://${context.req?.headers["host"]}/api/search?v=${version}&lang=${lang}&q=${search}&limit=5000`);
+    if (response.data)
+      searchResults = response.data;
+  }
+
 
   return {
     props: {
@@ -148,7 +140,8 @@ export async function getServerSideProps(context: NextPageContext) {
       lang: lang,
       navs: yml,
       verlang,
-      search
+      search,
+      searchResults
     },
   }
 }

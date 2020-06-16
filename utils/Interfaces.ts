@@ -75,6 +75,7 @@ export interface SearchPageQuery extends HasVerAndLang{
 export interface SearchProps extends HasVerAndLang, HasTheme, HasVerLang {
   navs: object
   search: string
+  searchResults: SearchResults
 }
 
 export interface SearchResults {
