@@ -63,7 +63,7 @@ export async function getServerSideProps(context: NextPageContext) {
         props: { slug: slug }
       }
     }
-    if (context.req.url && !context.req.url.endsWith("/")) {
+    if (context.req.url && !context.req.url.endsWith("/") && !context.req.url.endsWith(".json")) {
       context.res.writeHead(301, {
         Location: context.req.url + "/",
         // Add the content-type for SEO considerations
