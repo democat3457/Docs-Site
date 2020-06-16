@@ -123,8 +123,8 @@ export async function getServerSideProps(context: NextPageContext) {
     results: []
   }
   if (search.length >= 3) {
-    // Forcing https isn't ideal, but no way to figure the protocol out, and SSL should be standard.
-    let response = await axios.get(`https://${context.req?.headers["host"]}/api/search?v=${version}&lang=${lang}&q=${search}&limit=5000`);
+    // Forcing http isn't ideal, but no way to figure the protocol out, and this is just a local connection anyway.
+    let response = await axios.get(`http://${context.req?.headers["host"]}/api/search?v=${version}&lang=${lang}&q=${search}&limit=5000`);
     if (response.data)
       searchResults = response.data;
   }
