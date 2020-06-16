@@ -12,14 +12,13 @@ export default function Content({ version, lang, page }: ContentProps) {
 
 
   function transform(url: string, image: boolean) {
-    console.log(url);
     if (!url) {
       return ``;
     }
     if (url.startsWith("http")) {
       return url;
     }
-    if(url.startsWith("#")){
+    if (url.startsWith("#")) {
       return url;
     }
     if (!url.startsWith("/")) {
