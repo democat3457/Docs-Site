@@ -56,6 +56,7 @@ const Search = ({ theme, version, lang, navs, verlang, search }: SearchProps) =>
 
                   if (event.target.value.length < 3) {
                     router.push(`/[version]/[lang]/search/`, `/${version}/${lang}/search/`, { shallow: false });
+                    return;
                   }
                   router.push(`/[version]/[lang]/search/?search=${event.target.value}`, `/${version}/${lang}/search/?search=${event.target.value}`, { shallow: false });
                 }} value = {displayedSearch}/>

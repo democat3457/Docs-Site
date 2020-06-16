@@ -69,8 +69,10 @@ module.exports = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     });
   }
-
-
+  // Makes the search a bit more greedy, may need to adjust number in the future
+  if (query.indexOf("^") !== -1) {
+    query += "^8"
+  }
   let results = index.search(query);
   let returned = [];
   for (let index in results) {
