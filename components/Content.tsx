@@ -11,18 +11,28 @@ import { ContentProps } from "../utils/Interfaces";
 export default function Content({ version, lang, page }: ContentProps) {
 
 
-  function transform(url: string) {
+  function transform(url: string, image: boolean) {
+    console.log(url);
     if (!url) {
       return ``;
     }
     if (url.startsWith("http")) {
       return url;
     }
+    if(url.startsWith("#")){
+      return url;
+    }
     if (!url.startsWith("/")) {
       return `../${url}`;
     }
 
-    return `/${version}/${lang}${url.startsWith("/") ? url : `/${url}`}`;
+    let newUrl = url.startsWith("/") ? url : `/${url}`;
+    if (!image) {
+      if (!newUrl.endsWith("/")) {
+        newUrl += "/";
+      }
+    }
+    return `/${version}/${lang}${newUrl}`;
   }
 
   const linkReferenceRenderer: (reference: any) => (string | any) = (reference: any) => {
@@ -44,7 +54,7 @@ export default function Content({ version, lang, page }: ContentProps) {
         tableCell: TableCell,
         link: Clink,
         heading: Heading
-      }} transformLinkUri = {transform} transformImageUri = {transform}/>
+      }} transformLinkUri = {uri => transform(uri, false)} transformImageUri = {uri => transform(uri, true)}/>
     </div>
   </>
 }
