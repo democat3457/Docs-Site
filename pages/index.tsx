@@ -8,6 +8,9 @@ import SideNav from "../components/SideNav";
 import { NextPageContext } from "next";
 import { DOCS_DEV, getTheme } from "../utils/Utils";
 import { HasTheme, HasVerLang } from "../utils/Interfaces";
+import dynamic from "next/dynamic";
+
+const DisplayAd = dynamic(() => import('../components/ads/DisplayAd'), { ssr: false })
 
 export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
 
@@ -50,26 +53,38 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
                   )}
                 </select>
 
-                <div className = {`flex flex-row flex-wrap mx-auto justify-center -mx-2 mt-4`}>
+                <div className = {`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 row-gap-4 col-gap-2 my-4`}>
+
                   {verlang[version].map((lang: string) => {
-                    return <div key = {`${lang}-${version}`} className = {`w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2 mb-4`}>
-                      <div className = {`border bg-gray-400 dark:bg-dark-800 dark:border-dark-700`}>
-                        <Link href = {`/[version]/[lang]/[...slug]`} as = {`/${version}/${lang}/index/`}>
+                    return <div className = {`border bg-gray-400 dark:bg-dark-800 dark:border-dark-700`} key = {`${lang}-${version}`}>
+                      <Link href = {`/[version]/[lang]/[...slug]`} as = {`/${version}/${lang}/index/`}>
 
-                          <a> <img className = {`w-full`} src = {getFlag(lang)} alt = {lang}/>
-                            <p className = {`text-xl font-semibold mt-2`}>Version: {version}</p>
-                            <p className = {`text-xl font-semibold mb-2`}>Language: {lang}</p>
-                          </a>
+                        <a> <img className = {`w-full`} src = {getFlag(lang)} alt = {lang}/>
+                          <p className = {`text-xl font-semibold mt-2`}>Version: {version}</p>
+                          <p className = {`text-xl font-semibold mb-2`}>Language: {lang}</p>
+                        </a>
 
-                        </Link>
+                      </Link>
 
-                      </div>
                     </div>
                   })}
-
                 </div>
+                <div className = {`grid gap-4 grid-cols-1 md:grid-cols-2 mb-4`}>
+
+                  <DisplayAd slot = "6866063899" current = {{
+                    key: "CraftTweaker Documentation",
+                    value: "CraftTweaker Documentation"
+                  }}/>
+
+                  <DisplayAd slot = "2785889097" current = {{
+                    key: "CraftTweaker Documentation",
+                    value: "CraftTweaker Documentation"
+                  }}/>
+                </div>
+
               </div>
             </div>
+
           </SimpleBar>
         </div>
       </div>
@@ -91,6 +106,8 @@ export async function getServerSideProps(context: NextPageContext) {
       verlang[version] = fs.readdirSync(path.join(docsdir, version));
     }
   }
+
+
   return {
     props: {
       theme: {

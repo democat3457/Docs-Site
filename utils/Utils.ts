@@ -1,8 +1,27 @@
 import { parse } from "cookie";
 import { NextPageContext } from "next";
 import { NavObject, Theme } from "./Interfaces";
+import { useEffect, useState } from "react";
 
 export const DOCS_DEV = process.env.NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV === "true";
+
+export function matchesMedia(query: string) {
+  const mediaQuery = window.matchMedia(query);
+  const getValue = () => {
+    return mediaQuery.matches
+  };
+  const [value, setValue] = useState(getValue);
+  useEffect(
+    () => {
+      const handler = () => setValue(getValue);
+      mediaQuery.addListener(handler)
+      return () => mediaQuery.removeListener(handler);
+    },
+    []
+  );
+
+  return value;
+}
 
 export function getTheme(context: NextPageContext): Theme {
   let pageTheme = "light";

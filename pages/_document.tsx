@@ -11,7 +11,9 @@ class MyDocument extends Document {
     return (
       <Html lang = {"en"}>
 
-        <Head/>
+        <Head>
+          <script data-ad-client="ca-pub-7211841189345460" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"/>
+        </Head>
         <body>
         <Main/>
 

@@ -3,7 +3,18 @@ import { ReactNode } from "react";
 declare global {
   interface Window {
     GA_INITIALIZED: boolean;
+    adsbygoogle: {}[];
   }
+}
+
+export interface AdProps {
+  client?: string
+  slot: string
+  format?: string
+  responsive?: boolean
+  className?: string,
+  mediaQuery?: string
+  current: any
 }
 
 export interface ArticleNavProps extends HasVerAndLang {
@@ -68,7 +79,7 @@ export interface PageQuery extends HasVerAndLang {
   slug: string[]
 }
 
-export interface SearchPageQuery extends HasVerAndLang{
+export interface SearchPageQuery extends HasVerAndLang {
   search: string
 }
 

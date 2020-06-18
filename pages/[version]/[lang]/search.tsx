@@ -11,7 +11,9 @@ import { DOCS_DEV, getTheme } from "../../../utils/Utils";
 import SideNav from "../../../components/SideNav";
 import { useRouter } from "next/router";
 import axios from 'axios';
+import dynamic from "next/dynamic";
 
+const DisplayAd = dynamic(() => import('../../..//components/ads/DisplayAd'), { ssr: false })
 const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: SearchProps) => {
   const [displayedSearch, setDisplayedSearch] = useState(search);
   const [showingNav, setShowingNav] = useState(false);
@@ -28,42 +30,52 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
         }} verlang = {verlang} stub = {false} showingNav = {showingNav}/>
         <div className = {`w-full md:w-content`}>
           <SimpleBar className = {`mx-auto max-h-with-nav w-full`}>
-            <div className = "container mx-auto text-center mt-1 dark:text-dark-100 py-4">
-              <div className = {`w-5/6 mx-auto`}>
-                <label className = "text-4xl" htmlFor = "main-search">Search</label>
-                <input disabled = {DOCS_DEV} id = "main-search" className = "bg-transparent block w-full p-2 border border-gray-400 dark:border-dark-600" onChange = {(event) => {
-                  setDisplayedSearch((event.target.value));
+            <div className = {`grid grid-cols-1 lg:grid-cols-content`}>
+              <div className = {`flex flex-col justify-between`}>
+                <DisplayAd slot = {`2785889097`} className = {`md:mx-auto`}  current = {{ key: "Search", value: "Search" }}/>
+                <DisplayAd slot = {`4624233302`} className = {`md:mx-auto`} mediaQuery = {"(min-width: 768px)"}  current = {{ key: "Search", value: "Search" }}/>
+              </div>
+              <div className = {`w-11/12 md:w-full pt-4 pb-16 px-4 mx-auto dark:text-dark-100`}>
+                <div className = {`w-5/6 mx-auto`}>
+                  <label className = "text-4xl" htmlFor = "main-search">Search</label>
+                  <input disabled = {DOCS_DEV} id = "main-search" className = "bg-transparent block w-full p-2 border border-gray-400 dark:border-dark-600" onChange = {(event) => {
+                    setDisplayedSearch((event.target.value));
 
-                  if (event.target.value.length < 3) {
-                    router.push(`/[version]/[lang]/search/`, `/${version}/${lang}/search/`, { shallow: false });
-                    return;
-                  }
-                  router.push(`/[version]/[lang]/search/?search=${event.target.value}`, `/${version}/${lang}/search/?search=${event.target.value}`, { shallow: false });
-                }} value = {displayedSearch}/>
+                    if (event.target.value.length < 3) {
+                      router.push(`/[version]/[lang]/search/`, `/${version}/${lang}/search/`, { shallow: false });
+                      return;
+                    }
+                    router.push(`/[version]/[lang]/search/?search=${event.target.value}`, `/${version}/${lang}/search/?search=${event.target.value}`, { shallow: false });
+                  }} value = {displayedSearch}/>
 
 
-                <div>
-                  {searchResults.count > 0 ? searchResults.results.map((value, index) =>
+                  <div>
+                    {searchResults.count > 0 ? searchResults.results.map((value, index) =>
 
-                    <Link href = {`/[version]/[lang]/[...slug]`} as = {(value.location.startsWith("/") ? value.location : `/${value.location}`).replace(/\.md/, "")} key = {`${index}`}>
+                      <Link href = {`/[version]/[lang]/[...slug]`} as = {(value.location.startsWith("/") ? value.location : `/${value.location}`).replace(/\.md/, "")} key = {`${index}`}>
 
-                      <a className = {`px-2 block hover:bg-gray-400 dark-hover:bg-dark-700`}>
+                        <a className = {`px-2 block hover:bg-gray-400 dark-hover:bg-dark-700`}>
 
-                        <div className = "py-1 pl-2">
-                          <h2 className = "py-2 text-blue-700 dark:text-blue-300">
-                            Page: {value.location.substring(0, value.location.lastIndexOf(".md")).substring(value.location.lastIndexOf("/") + 1)}
-                          </h2>
-                          <h4 className = "mt-0 mb-1 text-base">
-                            {value.title && <p>{value.title}</p>}
-                          </h4>
-                        </div>
+                          <div className = "py-1 pl-2">
+                            <h2 className = "py-2 text-blue-700 dark:text-blue-300">
+                              Page: {value.location.substring(0, value.location.lastIndexOf(".md")).substring(value.location.lastIndexOf("/") + 1)}
+                            </h2>
+                            <h4 className = "mt-0 mb-1 text-base">
+                              {value.title && <p>{value.title}</p>}
+                            </h4>
+                          </div>
 
-                      </a>
+                        </a>
 
-                    </Link>
-                  ) : (searchResults.count === 0 ? <div>
-                    <h4>No results found</h4></div> : <></>)}
+                      </Link>
+                    ) : (searchResults.count === 0 ? <div>
+                      <h4>No results found</h4></div> : <></>)}
+                  </div>
                 </div>
+              </div>
+              <div className = {`flex flex-col justify-between`}>
+                <DisplayAd slot = {`6866063899`} className = {`md:mx-auto`}  current = {{ key: "Search", value: "Search" }}/>
+                <DisplayAd slot = {`5174542427`} className = {`md:mx-auto`} mediaQuery = {"(min-width: 768px)"}  current = {{ key: "Search", value: "Search" }}/>
               </div>
             </div>
 
