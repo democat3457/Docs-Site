@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start -p 2901",
-    "fast-dev": "cross-env NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV=false next build && next start",
-    "serve": "cross-env NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV=true next build && next start",
-    "serve-dev": "cross-env NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV=true next"
+    "start": "cross-env NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV=false NEXT_PUBLIC_SITE_DEV=false next start -p 2901",
+    "fast-dev": "cross-env NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV=false NEXT_PUBLIC_SITE_DEV=true next build && next start",
+    "serve": "cross-env NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV=true NEXT_PUBLIC_SITE_DEV=true next build && next start",
+    "serve-dev": "cross-env NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV=true NEXT_PUBLIC_SITE_DEV=true next"
   },
   "repository": {
     "type": "git",

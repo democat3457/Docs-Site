@@ -10,16 +10,17 @@ import Layout from "../../../components/layout";
 import SideNav from "../../../components/SideNav";
 import { NavObject, PageProps, PageQuery } from "../../../utils/Interfaces";
 import { NextPageContext } from "next";
-import { DOCS_DEV, getTheme, walkYaml } from "../../../utils/Utils";
+import { DOCS_DEV, getTheme, SITE_DEV, walkYaml } from "../../../utils/Utils";
 import dynamic from "next/dynamic";
 
-const DisplayAd = dynamic(() => import('../../..//components/ads/DisplayAd'), { ssr: false })
+const DisplayAd = dynamic(() => import('../../../components/ads/DisplayAd'), { ssr: false })
 
 const Page = ({ theme, version, lang, previous, current, next, navs, page, verlang }: PageProps) => {
   const [showingNav, setShowingNav] = useState(false);
   useEffect(() => {
     setShowingNav(false);
   }, [current]);
+
   return (
     <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {current}>
       <div className = "flex flex-row">
@@ -31,8 +32,9 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
 
             <div className = {`grid grid-cols-1 lg:grid-cols-content`}>
               <div className = {`flex flex-col justify-between`}>
-                <DisplayAd slot = {`2785889097`} className={`md:mx-auto`} current={current}/>
-                <DisplayAd slot = {`4624233302`} className={`md:mx-auto`} mediaQuery={"(min-width: 768px)"} current={current}/>
+                {!SITE_DEV && <DisplayAd slot = {`2785889097`} className = {`md:mx-auto`} current = {current}/>}
+
+                {!SITE_DEV && <DisplayAd slot = {`4624233302`} className = {`md:mx-auto`} mediaQuery = {"(min-width: 768px)"} current = {current}/>}
               </div>
               <div className = {`w-11/12 md:w-full pt-4 pb-16 px-4 mx-auto dark:text-dark-100`}>
                 <ArticleNav version = {version} lang = {lang} previous = {previous} next = {next}/>
@@ -40,8 +42,9 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
                 <ArticleNav version = {version} lang = {lang} previous = {previous} next = {next}/>
               </div>
               <div className = {`flex flex-col justify-between`}>
-                <DisplayAd slot = {`6866063899`} className={`md:mx-auto`} current={current}/>
-                <DisplayAd slot = {`5174542427`} className={`md:mx-auto`} mediaQuery={"(min-width: 768px)"} current={current}/>
+                {!SITE_DEV && <DisplayAd slot = {`6866063899`} className = {`md:mx-auto`} current = {current}/>}
+
+                {!SITE_DEV && <DisplayAd slot = {`5174542427`} className = {`md:mx-auto`} mediaQuery = {"(min-width: 768px)"} current = {current}/>}
               </div>
             </div>
           </SimpleBar>
@@ -51,7 +54,6 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
   )
 }
 
-// md:max-w-screen-lg
 export async function getServerSideProps(context: NextPageContext) {
   let { pageTheme, hljsStyle } = getTheme(context);
   let { lang, slug, version } = context.query as unknown as PageQuery;

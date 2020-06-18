@@ -4,6 +4,7 @@ import { NavObject, Theme } from "./Interfaces";
 import { useEffect, useState } from "react";
 
 export const DOCS_DEV = process.env.NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV === "true";
+export const SITE_DEV = process.env.NEXT_PUBLIC_SITE_DEV === "true";
 
 export function matchesMedia(query: string) {
   const mediaQuery = window.matchMedia(query);

@@ -6,7 +6,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import SideNav from "../components/SideNav";
 import { NextPageContext } from "next";
-import { DOCS_DEV, getTheme } from "../utils/Utils";
+import { DOCS_DEV, getTheme, SITE_DEV } from "../utils/Utils";
 import { HasTheme, HasVerLang } from "../utils/Interfaces";
 import dynamic from "next/dynamic";
 
@@ -71,15 +71,15 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
                 </div>
                 <div className = {`grid gap-4 grid-cols-1 md:grid-cols-2 mb-4`}>
 
-                  <DisplayAd slot = "6866063899" current = {{
+                  {!SITE_DEV && <DisplayAd slot = "6866063899" current = {{
                     key: "CraftTweaker Documentation",
                     value: "CraftTweaker Documentation"
-                  }}/>
+                  }}/>}
 
-                  <DisplayAd slot = "2785889097" current = {{
+                  {!SITE_DEV && <DisplayAd slot = "2785889097" current = {{
                     key: "CraftTweaker Documentation",
                     value: "CraftTweaker Documentation"
-                  }}/>
+                  }}/>}
                 </div>
 
               </div>
