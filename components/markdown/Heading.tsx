@@ -35,7 +35,7 @@ export default function Heading({ level, children }: HeadingProps) {
   let child: any = children[0];
   let id = child.props.value.toLowerCase().replace(/[^a-zA-Z0-9_-]/gmi, "-");
 
-  return <a href = {`#${id}`}>
+  return <a href = {`#${id}`} className={`inline-block`}>
     {makeHeader(level, id, child)}
   </a>
 
