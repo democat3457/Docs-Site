@@ -11,7 +11,6 @@ function DisplayAd({ client = "ca-pub-7211841189345460", format = "auto", respon
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (e) {
-      console.log(e);
     }
   }, [matches, current]);
 
