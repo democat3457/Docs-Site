@@ -20,6 +20,14 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
   const router = useRouter();
   useEffect(() => {
     setShowingNav(false);
+    const script = document.createElement("script");
+    script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+    script.async = true;
+    script.dataset.adClient = "ca-pub-7211841189345460";
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    }
   }, []);
   return (
     <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {{ key: "Search", value: "Search" }}>

@@ -19,6 +19,16 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
   const [showingNav, setShowingNav] = useState(false);
   useEffect(() => {
     setShowingNav(false);
+
+    const script = document.createElement("script");
+    script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+    script.async = true;
+    script.dataset.adClient = "ca-pub-7211841189345460";
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    }
+
   }, [current]);
 
   return (

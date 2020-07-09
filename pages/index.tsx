@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SimpleBar from "simplebar-react";
 import Layout from "../components/layout";
 import fs from 'fs-extra';
@@ -27,6 +27,18 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
     }
     return `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/flags/4x3/${lang}.svg`
   }
+  useEffect(() => {
+
+    const script = document.createElement("script");
+    script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+    script.async = true;
+    script.dataset.adClient = "ca-pub-7211841189345460";
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    }
+
+  }, []);
 
   let [version, setVersion] = useState(Object.keys(verlang).sort((a, b) => b.localeCompare(a))[0]);
 
