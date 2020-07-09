@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path'
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SimpleBar from 'simplebar-react';
 import yaml from 'yaml';
 import Layout from "../../../components/layout";
@@ -9,7 +9,7 @@ import { SearchPageQuery, SearchProps, SearchResults } from "../../../utils/Inte
 import { NextPageContext } from "next";
 import { DOCS_DEV, getTheme } from "../../../utils/Utils";
 import SideNav from "../../../components/SideNav";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import axios from 'axios';
 import dynamic from "next/dynamic";
 
@@ -18,8 +18,18 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
   const [displayedSearch, setDisplayedSearch] = useState(search);
   const [showingNav, setShowingNav] = useState(false);
   const router = useRouter();
+  const simpleBarRef = useRef(null);
   useEffect(() => {
-    setShowingNav(false);
+
+    // Handles reseting simple bar's position
+    const handleRouteChange = () => {
+      // @ts-ignore
+      simpleBarRef.current?.getScrollElement().scrollTo(0, 0);
+    };
+    Router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+
+    };
     const script = document.createElement("script");
     script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
     script.async = true;
@@ -27,7 +37,9 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
     document.body.appendChild(script);
     return () => {
       document.body.removeChild(script);
+      Router.events.off("routeChangeComplete", handleRouteChange);
     }
+
   }, []);
   return (
     <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {{ key: "Search", value: "Search" }}>
@@ -37,11 +49,14 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
           value: "search"
         }} verlang = {verlang} stub = {false} showingNav = {showingNav}/>
         <div className = {`w-full md:w-content`}>
-          <SimpleBar className = {`mx-auto max-h-with-nav w-full`}>
+          <SimpleBar className = {`mx-auto max-h-with-nav w-full`} ref = {simpleBarRef}>
             <div className = {`grid grid-cols-1 lg:grid-cols-content`}>
               <div className = {`flex flex-col justify-between`}>
-                <DisplayAd slot = {`2785889097`} className = {`md:mx-auto`}  current = {{ key: "Search", value: "Search" }}/>
-                <DisplayAd slot = {`4624233302`} className = {`md:mx-auto`} mediaQuery = {"(min-width: 768px)"}  current = {{ key: "Search", value: "Search" }}/>
+                <DisplayAd slot = {`2785889097`} className = {`md:mx-auto`} current = {{ key: "Search", value: "Search" }}/>
+                <DisplayAd slot = {`4624233302`} className = {`md:mx-auto`} mediaQuery = {"(min-width: 768px)"} current = {{
+                  key: "Search",
+                  value: "Search"
+                }}/>
               </div>
               <div className = {`w-11/12 md:w-full pt-4 pb-16 px-4 mx-auto dark:text-dark-100`}>
                 <div className = {`w-5/6 mx-auto`}>
@@ -82,8 +97,11 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
                 </div>
               </div>
               <div className = {`flex flex-col justify-between`}>
-                <DisplayAd slot = {`6866063899`} className = {`md:mx-auto`}  current = {{ key: "Search", value: "Search" }}/>
-                <DisplayAd slot = {`5174542427`} className = {`md:mx-auto`} mediaQuery = {"(min-width: 768px)"}  current = {{ key: "Search", value: "Search" }}/>
+                <DisplayAd slot = {`6866063899`} className = {`md:mx-auto`} current = {{ key: "Search", value: "Search" }}/>
+                <DisplayAd slot = {`5174542427`} className = {`md:mx-auto`} mediaQuery = {"(min-width: 768px)"} current = {{
+                  key: "Search",
+                  value: "Search"
+                }}/>
               </div>
             </div>
 

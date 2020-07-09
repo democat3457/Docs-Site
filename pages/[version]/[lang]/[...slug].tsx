@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path'
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SimpleBar from 'simplebar-react';
 import yaml from 'yaml';
 
@@ -12,6 +12,7 @@ import { NavObject, PageProps, PageQuery } from "../../../utils/Interfaces";
 import { NextPageContext } from "next";
 import { DOCS_DEV, getTheme, SITE_DEV, walkYaml } from "../../../utils/Utils";
 import dynamic from "next/dynamic";
+import { Router } from "next/router";
 
 const DisplayAd = dynamic(() => import('../../../components/ads/DisplayAd'), { ssr: false })
 
@@ -30,7 +31,18 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
     }
 
   }, [current]);
-
+  const simpleBarRef = useRef(null);
+  useEffect(() => {
+    // Handles reseting simple bar's position
+    const handleRouteChange = () => {
+      // @ts-ignore
+      simpleBarRef.current?.getScrollElement().scrollTo(0, 0);
+    };
+    Router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      Router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, []);
   return (
     <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {current}>
       <div className = "flex flex-row">
@@ -38,7 +50,7 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
         <SideNav version = {version} lang = {lang} navs = {navs} current = {current} verlang = {verlang} stub = {false} showingNav = {showingNav}/>
 
         <div className = {`w-full md:w-content`}>
-          <SimpleBar className = {`mx-auto max-h-with-nav w-full`}>
+          <SimpleBar className = {`mx-auto max-h-with-nav w-full`} ref = {simpleBarRef}>
 
             <div className = {`grid grid-cols-1 lg:grid-cols-content`}>
               <div className = {`flex flex-col justify-between`}>

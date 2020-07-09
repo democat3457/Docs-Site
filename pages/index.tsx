@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SimpleBar from "simplebar-react";
 import Layout from "../components/layout";
 import fs from 'fs-extra';
@@ -9,6 +9,7 @@ import { NextPageContext } from "next";
 import { DOCS_DEV, getTheme, SITE_DEV } from "../utils/Utils";
 import { HasTheme, HasVerLang } from "../utils/Interfaces";
 import dynamic from "next/dynamic";
+import { Router } from "next/router";
 
 const DisplayAd = dynamic(() => import('../components/ads/DisplayAd'), { ssr: false })
 
@@ -27,8 +28,18 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
     }
     return `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/flags/4x3/${lang}.svg`
   }
+  const simpleBarRef = useRef(null);
   useEffect(() => {
 
+    // Handles reseting simple bar's position
+    const handleRouteChange = () => {
+      // @ts-ignore
+      simpleBarRef.current?.getScrollElement().scrollTo(0, 0);
+    };
+    Router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+
+    };
     const script = document.createElement("script");
     script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
     script.async = true;
@@ -36,9 +47,12 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
     document.body.appendChild(script);
     return () => {
       document.body.removeChild(script);
+      Router.events.off("routeChangeComplete", handleRouteChange);
     }
 
   }, []);
+
+
 
   let [version, setVersion] = useState(Object.keys(verlang).sort((a, b) => b.localeCompare(a))[0]);
 
@@ -51,7 +65,7 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
       <div className = {`flex flex-row`}>
         <SideNav stub = {true} showingNav = {showingNav}/>
         <div className = {`w-full md:w-content`}>
-          <SimpleBar className = {`mx-auto max-h-with-nav w-full`}>
+          <SimpleBar className = {`mx-auto max-h-with-nav w-full`} ref = {simpleBarRef}>
             <div className = "container mx-auto text-center mt-1 dark:text-dark-100">
               <div className = {`w-5/6 mx-auto`}>
                 <label className = "text-4xl" htmlFor = "main-version-select"> Select Version </label>
