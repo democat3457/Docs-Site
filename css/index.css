@@ -121,6 +121,10 @@ body {
   @apply mb-0;
 }
 
+.markdown p > code {
+  @apply text-sm;
+}
+
 .simplebar-scrollbar::before {
   background-color: #3DA6E4 !important;
   border:           1px solid #1A6996 !important;
