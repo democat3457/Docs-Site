@@ -66,9 +66,9 @@ export default function SearchNav({ version, lang }: HasVerAndLang) {
       <div className = {`bg-gray-100 dark:bg-dark-900`}>
         {searchResults.count > 0 ? searchResults.results.map((value, index) =>
 
-          // <Link href = {`/[version]/[lang]/[...slug]/`} as = {(value.location.startsWith("/") ? value.location : `/${value.location}`).replace(/\.md/, "")} key = {`${index}`}>
+          <Link href = {`/[version]/[lang]/[...slug]/`} as = {(value.location.startsWith("/") ? value.location : `/${value.location}`).replace(/\.md/, "")} key = {`${index}`}>
 
-            <a key = {`${index}`} className = {`px-2 block hover:bg-gray-400 dark-hover:bg-dark-700 border-t border-b dark:border-dark-700`} href={(value.location.startsWith("/") ? value.location : `/${value.location}`).replace(/\.md/, "")}>
+            <a className = {`px-2 block hover:bg-gray-400 dark-hover:bg-dark-700 border-t border-b dark:border-dark-700`}>
 
               <div className = "py-1 pl-2">
                 <h4 className = "my-0 text-base truncate">
@@ -80,7 +80,7 @@ export default function SearchNav({ version, lang }: HasVerAndLang) {
 
             </a>
 
-          // </Link>
+          </Link>
         ) : searchResults.count === 0 ? <div>
           <div className = {`px-2 block hover:bg-gray-400 dark-hover:bg-dark-700 border-t border-b dark:border-dark-700`}>
 
@@ -95,9 +95,9 @@ export default function SearchNav({ version, lang }: HasVerAndLang) {
         </div> : <> </>}
 
         {searchResults && searchResults.totalCount > 5 && <div>
-          {/*<Link href = {`/[version]/[lang]/search/`} as = {`/${version}/${lang}/search/?search=${searchValue}`}>*/}
+          <Link href = {`/[version]/[lang]/search/`} as = {`/${version}/${lang}/search/?search=${searchValue}`}>
 
-            <a className = {`px-2 block hover:bg-gray-400 dark-hover:bg-dark-700 border-t border-b dark:border-dark-700`} href={`/${version}/${lang}/search/?search=${searchValue}`}>
+            <a className = {`px-2 block hover:bg-gray-400 dark-hover:bg-dark-700 border-t border-b dark:border-dark-700`}>
 
               <div className = "py-1 pl-2">
                 <h4 className = "my-0 text-base truncate">
@@ -108,7 +108,7 @@ export default function SearchNav({ version, lang }: HasVerAndLang) {
 
             </a>
 
-          {/*</Link>*/}
+          </Link>
         </div>}
       </div>
     </motion.div>

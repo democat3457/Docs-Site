@@ -113,14 +113,14 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
 
                   {verlang[version].map((lang: string) => {
                     return <div className = {`border bg-gray-400 dark:bg-dark-800 dark:border-dark-700`} key = {`${lang}-${version}`}>
-                      {/*<Link href = {`/[version]/[lang]/[...slug]`} as = {`/${version}/${lang}/index/`}>*/}
+                      <Link href = {`/[version]/[lang]/[...slug]`} as = {`/${version}/${lang}/index/`}>
 
-                        <a href={`/${version}/${lang}/index/`}> <img className = {`w-full`} src = {getFlag(lang)} alt = {lang}/>
+                        <a> <img className = {`w-full`} src = {getFlag(lang)} alt = {lang}/>
                           <p className = {`text-xl font-semibold mt-2`}>Version: {version}</p>
                           <p className = {`text-xl font-semibold mb-2`}>Language: {lang}</p>
                         </a>
 
-                      {/*</Link>*/}
+                      </Link>
 
                     </div>
                   })}
