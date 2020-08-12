@@ -12,6 +12,7 @@ import SideNav from "../../../components/SideNav";
 import { Router, useRouter } from "next/router";
 import axios from 'axios';
 import dynamic from "next/dynamic";
+import { NextSeo } from "next-seo";
 
 const DisplayAd = dynamic(() => import('../../..//components/ads/DisplayAd'), { ssr: false })
 const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: SearchProps) => {
@@ -43,6 +44,34 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
   }, []);
   return (
     <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {{ key: "Search", value: "Search" }}>
+
+      <NextSeo
+        title = {`Search - CraftTweaker Documentation`}
+        description = {`Documentation for the CraftTweaker Minecraft mod, information on how to use the ZenScript language and a central wiki for mods that rely on it.`}
+        canonical = {`https://docs.blamejared.com/${version}/${lang}/search/`}
+        openGraph = {{
+          type: `website`,
+          url: `https://docs.blamejared.com/${version}/${lang}/search/`,
+          title: `Search - CraftTweaker Documentation`,
+          description: `Documentation for the CraftTweaker Minecraft mod, information on how to use the ZenScript language and a central wiki for mods that rely on it.`,
+          images: [
+            {
+              url: `https://docs.blamejared.com/og_image.png`,
+              width: 90,
+              height: 92,
+              alt: `CraftTweaker logo`,
+            }
+          ],
+        }}
+        additionalMetaTags = {[{
+          property: 'keywords',
+          content: `CraftTweaker,CraftTweaker docs,CraftTweaker documentation,CraftTweaker wiki,CraftTweaker mod`
+        }, {
+          property: 'charset',
+          content: `utf-8`
+        }]}
+      />
+
       <div className = "flex flex-row">
         <SideNav version = {version} lang = {lang} navs = {navs} current = {{
           key: "search",

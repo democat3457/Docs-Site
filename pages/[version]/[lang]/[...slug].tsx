@@ -13,6 +13,7 @@ import { NextPageContext } from "next";
 import { DOCS_DEV, getTheme, SITE_DEV, walkYaml } from "../../../utils/Utils";
 import dynamic from "next/dynamic";
 import { Router } from "next/router";
+import { NextSeo } from "next-seo";
 
 const DisplayAd = dynamic(() => import('../../../components/ads/DisplayAd'), { ssr: false })
 
@@ -45,6 +46,35 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
   }, []);
   return (
     <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {current}>
+
+      <NextSeo
+        title = {`${current.key} - CraftTweaker Documentation`}
+        description = {`Documentation for the CraftTweaker Minecraft mod, information on how to use the ZenScript language and a central wiki for mods that rely on it.`}
+        canonical = {`https://docs.blamejared.com/${version}/${lang}/${current.value}/`}
+        openGraph = {{
+          type: `website`,
+          url: `https://docs.blamejared.com/${version}/${lang}/${current.value}/`,
+          title: `${current.key} - CraftTweaker Documentation`,
+          description: `Documentation for the CraftTweaker Minecraft mod, information on how to use the ZenScript language and a central wiki for mods that rely on it.`,
+          images: [
+            {
+              url: `https://docs.blamejared.com/og_image.png`,
+              width: 90,
+              height: 92,
+              alt: `CraftTweaker logo`,
+            }
+          ],
+        }}
+        additionalMetaTags = {[{
+          property: 'keywords',
+          content: `CraftTweaker,CraftTweaker docs,CraftTweaker documentation,CraftTweaker wiki,CraftTweaker ${current.value},CraftTweaker Docs ${current.value},${current.value},CraftTweaker mod`
+        }, {
+          property: 'charset',
+          content: `utf-8`
+        }]}
+      />
+
+
       <div className = "flex flex-row">
 
         <SideNav version = {version} lang = {lang} navs = {navs} current = {current} verlang = {verlang} stub = {false} showingNav = {showingNav}/>
