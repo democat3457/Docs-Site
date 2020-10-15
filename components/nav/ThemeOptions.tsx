@@ -1,14 +1,23 @@
 import { motion } from "framer-motion";
 import { listStyles } from "../markdown/CodeBlock";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useDarkMode from "use-dark-mode";
 
 export default function ThemeOptions() {
   const darkMode = useDarkMode(false, { classNameDark: "mode-dark", classNameLight: "mode-light" });
-  const [themeOptionsOpen, setThemeOptionsOpen] = useState(false);
+  const [themeOptionsOpen, setThemeOptionsOpen] = useState(true);
   let motionOptions = {
     height: themeOptionsOpen ? "100%" : 0
   }
+
+  useEffect(() => {
+    if (localStorage.getItem("darkMode") === "true") {
+      darkMode.enable();
+    } else {
+      darkMode.disable();
+    }
+
+  }, [])
   return <>
     <div className = "flex-none relative my-auto inline-block border-b dark:border-dark-700 py-2 flex flex-row pl-2 text-center cursor-pointer hover:bg-gray-400 dark-hover:bg-dark-600 select-none" onClick = {() => {
       setThemeOptionsOpen(!themeOptionsOpen)
