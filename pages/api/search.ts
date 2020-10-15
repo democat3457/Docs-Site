@@ -3,14 +3,25 @@ import path from 'path';
 import lunr from 'lunr';
 import url from 'url';
 import { NextApiRequest, NextApiResponse } from "next";
+import { SearchData } from "../../utils/Interfaces";
 
 module.exports = async (req: NextApiRequest, res: NextApiResponse) => {
   let version: string = req.query["v"] as string;
   let lang: string = req.query["lang"] as string;
   let query: string = req.query["q"] as string;
-  let limit: number = req.query["limit"] as unknown as number;
+  let limit: number = parseInt(req.query["limit"] as string);
+
+
+  let data = await doSearch(version, lang, query, limit)
+  res.status(data.status).send(data.body);
+}
+
+export default async function doSearch(version: string, lang: string, query: string, limit: number): Promise<SearchData> {
+
+  let searchData: SearchData = { body: {}, status: 200 };
   if (!version || !lang || !query) {
-    res.status(400).send({
+    searchData.status = 400;
+    searchData.body = {
       message: "Requires version (v), language (lang) and query (q), limit (limit) (optional)",
       example: "?v=1.12&lang=en&q=item&limit=5",
       given: {
@@ -19,29 +30,32 @@ module.exports = async (req: NextApiRequest, res: NextApiResponse) => {
         query: `${query}`,
         limit: `${limit}`
       }
-    });
-    return;
+    }
+    return Promise.resolve(searchData);
   }
   if (!limit || limit === 0) {
     limit = 5;
   }
   if (query.length < 3) {
-    res.status(400).send({ error: "Minimum search query is 3 characters!" });
-    return;
+    searchData.status = 400;
+    searchData.body = { error: "Minimum search query is 3 characters!" }
+    return Promise.resolve(searchData);
   }
 
   let docsDir = path.join(process.cwd(), "docs");
 
   let validVersions = fs.readdirSync(docsDir);
   if (validVersions.indexOf(version) === -1) {
-    res.status(400).send({ error: `No version found for: '${version}'` });
-    return;
+    searchData.status = 400;
+    searchData.body = { error: `No version found for: '${version}'` }
+    return Promise.resolve(searchData);
   }
   let versionDir = path.join(docsDir, version);
   let validLangs = fs.readdirSync(versionDir);
   if (validLangs.indexOf(lang) === -1) {
-    res.status(400).send({ error: `No language found for: '${lang}'` });
-    return;
+    searchData.status = 400;
+    searchData.body = { error: `No language found for: '${lang}'` }
+    return Promise.resolve(searchData);
   }
   let langDir = path.join(versionDir, lang);
 
@@ -88,5 +102,6 @@ module.exports = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  res.send({ count: returned.length, totalCount: results.length, results: returned });
+  searchData.body = { count: returned.length, totalCount: results.length, results: returned }
+  return Promise.resolve(searchData);
 }

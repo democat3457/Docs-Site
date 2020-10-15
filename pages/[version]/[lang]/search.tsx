@@ -15,13 +15,27 @@ import dynamic from "next/dynamic";
 import { NextSeo } from "next-seo";
 
 const DisplayAd = dynamic(() => import('../../..//components/ads/DisplayAd'), { ssr: false })
-const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: SearchProps) => {
-  const [displayedSearch, setDisplayedSearch] = useState(search);
+const Search = ({ version, lang, navs, verlang }: SearchProps) => {
+
+  const [searchResults, setSearchResults] = useState<SearchResults>({
+    totalCount: 0,
+    results: [],
+    count: -1
+  });
+  const [displayedSearch, setDisplayedSearch] = useState("");
   const [showingNav, setShowingNav] = useState(false);
   const router = useRouter();
   const simpleBarRef = useRef(null);
   useEffect(() => {
-
+    let params = new URLSearchParams(window.location.search);
+    if (params.has("search")) {
+      setDisplayedSearch(params.get("search") as string);
+      axios.get(`/api/search?v=${version}&lang=${lang}&q=${params.get("search") as string}&limit=5000`).then(value => {
+        setSearchResults(value.data);
+      }).catch(reason => {
+        console.log(reason);
+      })
+    }
     // Handles reseting simple bar's position
     const handleRouteChange = () => {
       // @ts-ignore
@@ -43,7 +57,7 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
 
   }, []);
   return (
-    <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {{ key: "Search", value: "Search" }}>
+    <Layout showingNav = {showingNav} setShowingNav = {setShowingNav} current = {{ key: "Search", value: "Search" }}>
 
       <NextSeo
         title = {`Search - CraftTweaker Documentation`}
@@ -95,9 +109,19 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
 
                     if (event.target.value.length < 3) {
                       router.push(`/[version]/[lang]/search/`, `/${version}/${lang}/search/`, { shallow: false });
+                      setSearchResults({
+                        totalCount: 0,
+                        results: [],
+                        count: -1
+                      });
                       return;
                     }
                     router.push(`/[version]/[lang]/search/?search=${event.target.value}`, `/${version}/${lang}/search/?search=${event.target.value}`, { shallow: false });
+                    axios.get(`/api/search?v=${version}&lang=${lang}&q=${event.target.value}&limit=5000`).then(value => {
+                      setSearchResults(value.data);
+                    }).catch(reason => {
+                      console.log(reason);
+                    })
                   }} value = {displayedSearch}/>
 
 
@@ -145,24 +169,24 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
 export async function getServerSideProps(context: NextPageContext) {
   let { pageTheme, hljsStyle } = getTheme(context);
 
-  let { lang, version, search = "" } = context.query as unknown as SearchPageQuery;
+  let { lang, version } = context.query as unknown as SearchPageQuery;
 
   let docsDir = path.join(process.cwd(), 'docs');
   let versionDir = path.join(docsDir, version);
   let langDir = path.join(versionDir, lang);
-  if (context.req && context.res) {
-    if (context.req.url && !context.req.url.endsWith("/") && context.req.url.indexOf(`?`) === -1) {
-      context.res.writeHead(301, {
-        Location: context.req.url + "/" + (search.length ? `?search=${search}` : ``),
-        // Add the content-type for SEO considerations
-        'Content-Type': 'text/html; charset=utf-8',
-      })
-      context.res.end();
-      return {
-        props: { slug: "search" }
-      }
-    }
-  }
+  // if (context.req && context.res) {
+  //   if (context.req.url && !context.req.url.endsWith("/") && context.req.url.indexOf(`?`) === -1) {
+  //     context.res.writeHead(301, {
+  //       Location: context.req.url + "/" + (search.length ? `?search=${search}` : ``),
+  //       // Add the content-type for SEO considerations
+  //       'Content-Type': 'text/html; charset=utf-8',
+  //     })
+  //     context.res.end();
+  //     return {
+  //       props: { slug: "search" }
+  //     }
+  //   }
+  // }
   let mkdocsLocation: string;
 
   if (DOCS_DEV) {
@@ -184,18 +208,6 @@ export async function getServerSideProps(context: NextPageContext) {
       verlang[version] = fs.readdirSync(path.join(docsDir, version));
     }
   }
-  let searchResults: SearchResults = {
-    count: -1,
-    totalCount: 0,
-    results: []
-  }
-  if (search.length >= 3) {
-    // Forcing http isn't ideal, but no way to figure the protocol out, and this is just a local connection anyway.
-    let response = await axios.get(`http://${context.req?.headers["host"]}/api/search?v=${version}&lang=${lang}&q=${search}&limit=5000`);
-    if (response.data)
-      searchResults = response.data;
-  }
-
 
   return {
     props: {
@@ -207,8 +219,6 @@ export async function getServerSideProps(context: NextPageContext) {
       lang: lang,
       navs: yml,
       verlang,
-      search,
-      searchResults
     },
   }
 }

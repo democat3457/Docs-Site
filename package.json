@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
+    "export": "next export",
     "start": "cross-env NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV=false NEXT_PUBLIC_SITE_DEV=false next start -p 2901",
     "fast-dev": "cross-env NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV=false NEXT_PUBLIC_SITE_DEV=true next build && next start",
     "serve": "cross-env NEXT_PUBLIC_CRAFTTWEAKER_DOCS_DEV=true NEXT_PUBLIC_SITE_DEV=true next build && next start",
@@ -29,7 +30,7 @@
     "highlightjs-zenscript": "^1.0.2",
     "lowlight": "^1.13.1",
     "lunr": "^2.3.8",
-    "next": "^9.4.0",
+    "next": "^9.5.5",
     "next-seo": "^4.7.3",
     "path": "^0.12.7",
     "react": "16.13.1",
@@ -39,6 +40,7 @@
     "react-markdown": "^4.3.1",
     "react-syntax-highlighter": "^12.2.1",
     "simplebar-react": "^2.2.0",
+    "use-dark-mode": "^2.3.1",
     "yaml": "^1.9.2"
   },
   "devDependencies": {

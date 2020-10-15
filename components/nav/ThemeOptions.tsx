@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { listStyles } from "../markdown/CodeBlock";
-import { ThemeContext } from "../layout";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
+import useDarkMode from "use-dark-mode";
 
 export default function ThemeOptions() {
+  const darkMode = useDarkMode(false, { classNameDark: "mode-dark", classNameLight: "mode-light" });
   const [themeOptionsOpen, setThemeOptionsOpen] = useState(false);
-  const theme = useContext(ThemeContext);
   let motionOptions = {
     height: themeOptionsOpen ? "100%" : 0
   }
@@ -26,17 +26,20 @@ export default function ThemeOptions() {
         <div className = "flex-none relative my-auto inline-block border-b dark:border-dark-700 py-2 flex flex-row px-2">
           <label htmlFor = "theme-select" className = "">Theme:</label>
           <select id = "theme-select" className = {`bg-transparent px-1 flex-grow`} onChange = {event => {
-            theme.setTheme(event.target.value, theme.hljsStyle);
-          }} defaultValue = {theme.pageTheme}>
+            if (event.target.value === "dark") {
+              darkMode.enable();
+            } else {
+              darkMode.disable();
+            }
+          }} defaultValue = {darkMode.value ? `dark` : `light`}>
             <option value = {`light`} className = {`text-black`}>Light</option>
             <option value = {`dark`} className = {`text-black`}>Dark</option>
           </select>
         </div>
         <div className = "flex-none relative my-auto inline-block border-b dark:border-dark-700 py-2 flex flex-row px-2">
           <label htmlFor = "hljs-style" className = "">Code Theme:</label>
-          <select id = "hljs-style" className = {`bg-transparent px-1 flex-grow`} onChange = {event => {
-            theme.setTheme(theme.pageTheme, event.target.value);
-          }} defaultValue = {theme.hljsStyle}>
+          <select id = "hljs-style" className = {`bg-transparent px-1 flex-grow`} disabled = {true} onChange = {event => {
+          }} defaultValue = {`default`}>
             <option value = {`default`} className = {`text-black`}>Default</option>
             {Object.keys(listStyles()).map(value =>
               <option key = {value} value = {value} className = {`text-black`}>{value}</option>)}

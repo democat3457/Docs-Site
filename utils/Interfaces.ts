@@ -44,13 +44,13 @@ export interface HeadingProps extends HasChildren, HasLevel {
   children: ReactNode[]
 }
 
-export interface NavFolderProps extends HasVerAndLang, HasTheme, HasNav, HasLevel {
+export interface NavFolderProps extends HasVerAndLang, HasNav, HasLevel {
   name: string
   current: any
   parentExpanded: boolean
 }
 
-export interface LayoutProps extends HasChildren, HasTheme {
+export interface LayoutProps extends HasChildren {
   current: NavObject
   showingNav: boolean
   setShowingNav: (showingNav: boolean) => void
@@ -67,12 +67,14 @@ export interface NavObject {
   value: string
 }
 
-export interface PageProps extends HasVerAndLang, HasTheme, HasVerLang {
+export interface PageProps extends HasVerAndLang, HasVerLang {
   previous: NavObject
   current: NavObject
   next: NavObject
   navs: object
   page: string
+  error?: boolean
+  errorMessage?: string
 }
 
 export interface PageQuery extends HasVerAndLang {
@@ -83,7 +85,7 @@ export interface SearchPageQuery extends HasVerAndLang {
   search: string
 }
 
-export interface SearchProps extends HasVerAndLang, HasTheme, HasVerLang {
+export interface SearchProps extends HasVerAndLang, HasVerLang {
   navs: object
   search: string
   searchResults: SearchResults
@@ -142,4 +144,9 @@ export interface HasNav {
 
 export interface HasLevel {
   level: number
+}
+
+export interface SearchData {
+  status: number,
+  body: any
 }

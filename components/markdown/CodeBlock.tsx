@@ -49,9 +49,9 @@ import {
 // @ts-ignore
   from 'react-syntax-highlighter/dist/cjs/styles/hljs/index';
 import SimpleBar from "simplebar-react";
-import { ThemeContext } from "../layout";
 import zenscript from '../zenscript';
 import { CodeBlockProps } from "../../utils/Interfaces";
+import useDarkMode from "use-dark-mode";
 
 SyntaxHighlighter.registerLanguage('zenscript', zenscript);
 
@@ -77,11 +77,11 @@ function getStyle(name: string): any {
 }
 
 function CodeBlock({ language, value }: CodeBlockProps) {
+  const darkMode = useDarkMode(false, { classNameDark: "mode-dark", classNameLight: "mode-light" });
 
-  const theme = useContext(ThemeContext);
   return (
     <SimpleBar forceVisible = {"x"} autoHide = {false} direction = {'x'}>
-      <SyntaxHighlighter className = {`whitespace-pre-wrap`} language = {language} style = {getStyle(theme.hljsStyle === "default" ? theme.pageTheme === `dark` ? `a11yDark` : `a11yLight` : theme.hljsStyle)} showLineNumbers = {false}>
+      <SyntaxHighlighter className = {`whitespace-pre-wrap`} language = {language} style = {getStyle(darkMode.value ? `a11yDark` : `a11yLight`)} showLineNumbers = {false}>
         {value}
       </SyntaxHighlighter> </SimpleBar>
   );

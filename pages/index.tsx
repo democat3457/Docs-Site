@@ -9,12 +9,17 @@ import { NextPageContext } from "next";
 import { DOCS_DEV, getTheme, SITE_DEV } from "../utils/Utils";
 import { HasTheme, HasVerLang } from "../utils/Interfaces";
 import dynamic from "next/dynamic";
-import { Router } from "next/router";
+import { Router, useRouter } from "next/router";
 import { NextSeo } from "next-seo";
+import Alert from "../components/Alert";
+import { error } from "next/dist/build/output/log";
 
 const DisplayAd = dynamic(() => import('../components/ads/DisplayAd'), { ssr: false })
 
-export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
+export default function Index({ verlang }: HasTheme & HasVerLang) {
+
+  const router = useRouter();
+  let [errorMessage, setErrorMessage] = useState("");
 
   function getFlag(lang: string) {
     // This handles lang -> flag, not great, but there isn't a proper solution
@@ -32,7 +37,10 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
 
   const simpleBarRef = useRef(null);
   useEffect(() => {
-
+    if (router.query.errorMessage) {
+      setErrorMessage(router.query.errorMessage as string);
+      router.replace("/");
+    }
     // Handles reseting simple bar's position
     const handleRouteChange = () => {
       // @ts-ignore
@@ -59,7 +67,7 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
 
   const [showingNav, setShowingNav] = useState(false);
   return (<>
-    <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {{
+    <Layout showingNav = {showingNav} setShowingNav = {setShowingNav} current = {{
       key: "CraftTweaker Documentation",
       value: "CraftTweaker Documentation"
     }}>
@@ -98,6 +106,7 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
           <SimpleBar className = {`mx-auto max-h-with-nav w-full`} ref = {simpleBarRef}>
             <div className = "container mx-auto text-center mt-1 dark:text-dark-100">
               <div className = {`w-5/6 mx-auto`}>
+                {errorMessage && <Alert type = "danger" className={`my-2`} canDismiss = {true}>{errorMessage}</Alert>}
                 <label className = "text-4xl" htmlFor = "main-version-select"> Select Version </label>
                 <select id = "main-version-select" className = "bg-transparent block w-full p-2 border border-gray-400 dark:border-dark-600"
                         onChange = {event => {
@@ -149,8 +158,8 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
 }
 
 
-export async function getServerSideProps(context: NextPageContext) {
-  let { pageTheme, hljsStyle } = getTheme(context);
+export async function getStaticProps(context: NextPageContext) {
+
   let verlang: any = {};
   if (DOCS_DEV) {
     verlang["0.00"] = ["en"];
@@ -166,11 +175,8 @@ export async function getServerSideProps(context: NextPageContext) {
 
   return {
     props: {
-      theme: {
-        pageTheme,
-        hljsStyle
-      },
       verlang
     },
+    revalidate: 60
   }
 }

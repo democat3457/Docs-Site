@@ -23,11 +23,12 @@ body {
   margin-bottom:    auto;
 }
 
-.nav-closed-dark {
+
+.nav-closed {
   content: "";
 }
 
-.nav-closed-dark::before {
+.mode-dark .nav-closed::before {
   content:          "";
   background-image: url("https://blamejared.com/svg/dark/cheveron-right.svg");
   display:          inline-block;
@@ -51,11 +52,7 @@ body {
   margin-bottom:    auto;
 }
 
-.nav-open-dark {
-  content: "";
-}
-
-.nav-open-dark::before {
+.mode-dark .nav-open::before {
   content:          "";
   background-image: url("https://blamejared.com/svg/dark/cheveron-down.svg");
   display:          inline-block;
@@ -63,6 +60,22 @@ body {
   height:           14px;
   margin-top:       auto;
   margin-bottom:    auto;
+}
+
+.cheveron-left {
+  content: url("https://blamejared.com/svg/cheveron-left.svg");
+}
+
+.mode-dark .cheveron-left {
+  content: url("https://blamejared.com/svg/dark/cheveron-left.svg");
+}
+
+.cheveron-right {
+  content: url("https://blamejared.com/svg/cheveron-right.svg");
+}
+
+.mode-dark .cheveron-right {
+  content: url("https://blamejared.com/svg/dark/cheveron-right.svg");
 }
 
 /* purgecss start ignore */

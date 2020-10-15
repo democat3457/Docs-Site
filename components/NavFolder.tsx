@@ -4,7 +4,7 @@ import NavItem from "./NavItem";
 import { NavFolderProps } from "../utils/Interfaces";
 import { walkYaml } from "../utils/Utils";
 
-function NavFolder({ theme, version, lang, name, current, nav, level, parentExpanded }: NavFolderProps) {
+function NavFolder({ version, lang, name, current, nav, level, parentExpanded }: NavFolderProps) {
 
   const [expanded, setExpanded] = useState(false);
   useEffect(() => {
@@ -25,7 +25,7 @@ function NavFolder({ theme, version, lang, name, current, nav, level, parentExpa
     <div>
     <span onClick = {() => {
       setExpanded(!expanded);
-    }} className = {`cursor-pointer pr-2 py-1 block hover:bg-gray-400 dark-hover:bg-dark-600 ${expanded ? `${theme.pageTheme === "dark" ? `nav-open-dark` : `nav-open`}` : `${theme.pageTheme === "dark" ? `nav-closed-dark` : `nav-closed`}`}`} style = {{ paddingLeft: `${level + 1}rem` }}>{name.replace("&#58;", ":")}</span>
+    }} className = {`cursor-pointer pr-2 py-1 block hover:bg-gray-400 dark-hover:bg-dark-600 ${expanded ? `nav-open` : `nav-closed`}`} style = {{ paddingLeft: `${level + 1}rem` }}>{name.replace("&#58;", ":")}</span>
       <motion.div
         initial = {{
           height: expanded ? "100%" : 0
@@ -41,7 +41,7 @@ function NavFolder({ theme, version, lang, name, current, nav, level, parentExpa
               let path = (Object.values(keyval)[0] as string).replace(/\.md/, "");
               return <NavItem version = {version} lang = {lang} nav = {keyval} path = {path} selected = {path === current.value} key = {`/${version}/${lang}/${path}`} level = {level + 1}/>
             } else {
-              return <NavFolder theme = {theme} version = {version} lang = {lang} current = {current} name = {Object.keys(keyval)[0]} nav = {Object.values(keyval)[0]} key = {JSON.stringify(Object.keys(keyval))} level = {level + 1} parentExpanded = {expanded}/>
+              return <NavFolder version = {version} lang = {lang} current = {current} name = {Object.keys(keyval)[0]} nav = {Object.values(keyval)[0]} key = {JSON.stringify(Object.keys(keyval))} level = {level + 1} parentExpanded = {expanded}/>
             }
           })}
         </div>

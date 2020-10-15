@@ -8,18 +8,24 @@ import ArticleNav from "../../../components/ArticleNav";
 import Content from "../../../components/Content";
 import Layout from "../../../components/layout";
 import SideNav from "../../../components/SideNav";
-import { NavObject, PageProps, PageQuery } from "../../../utils/Interfaces";
-import { NextPageContext } from "next";
-import { DOCS_DEV, getTheme, SITE_DEV, walkYaml } from "../../../utils/Utils";
+import { NavObject, PageProps } from "../../../utils/Interfaces";
+import { DOCS_DEV, SITE_DEV, walkYaml } from "../../../utils/Utils";
 import dynamic from "next/dynamic";
-import { Router } from "next/router";
+import { Router, useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 
 const DisplayAd = dynamic(() => import('../../../components/ads/DisplayAd'), { ssr: false })
 
-const Page = ({ theme, version, lang, previous, current, next, navs, page, verlang }: PageProps) => {
+const Page = ({ version, lang, previous, current, next, navs, page, verlang, error = false, errorMessage= "" }: PageProps) => {
+  const router = useRouter();
   const [showingNav, setShowingNav] = useState(false);
+  const simpleBarRef = useRef(null);
+
   useEffect(() => {
+    if(error){
+      console.log(errorMessage);
+      router.push(`/?errorMessage=${errorMessage}`)
+    }
     setShowingNav(false);
 
     const script = document.createElement("script");
@@ -32,7 +38,7 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
     }
 
   }, [current]);
-  const simpleBarRef = useRef(null);
+
   useEffect(() => {
     // Handles reseting simple bar's position
     const handleRouteChange = () => {
@@ -44,8 +50,13 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
       Router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, []);
+
+  if (router.isFallback || error) {
+    return <></>
+  }
+
   return (
-    <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {current}>
+    <Layout showingNav = {showingNav} setShowingNav = {setShowingNav} current = {current}>
 
       <NextSeo
         title = {`${current.key} - CraftTweaker Documentation`}
@@ -106,10 +117,8 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
   )
 }
 
-export async function getServerSideProps(context: NextPageContext) {
-  let { pageTheme, hljsStyle } = getTheme(context);
-  let { lang, slug, version } = context.query as unknown as PageQuery;
-
+export async function getStaticProps({ params }: any) {
+  let { lang, slug, version } = params;
   if (!slug) {
     slug = ['index']
   }
@@ -119,40 +128,22 @@ export async function getServerSideProps(context: NextPageContext) {
   let dvlDir = path.join(langDir, 'docs');
   let page = path.join(dvlDir, slug.join("/"));
 
+
   if (DOCS_DEV) {
     docsDir = path.join(path.join(process.cwd(), '../'), "docs");
     page = path.join(docsDir, slug.join("/"));
   }
 
-
-  if (context.req && context.res) {
-    if (slug[slug.length - 1].indexOf(".") !== -1) {
-      context.res.end(fs.readFileSync(page));
-      return {
-        props: { slug: slug }
-      }
-    }
-    if (context.req.url && !context.req.url.endsWith("/") && !context.req.url.endsWith(".json")) {
-      context.res.writeHead(301, {
-        Location: context.req.url + "/",
-        // Add the content-type for SEO considerations
-        'Content-Type': 'text/html; charset=utf-8',
-      })
-      context.res.end();
-      return {
-        props: { slug: slug }
-      }
-    }
-    if (!fs.existsSync(page + ".md")) {
-      context.res.writeHead(404, {
-        'Content-Type': 'text/html; charset=utf-8',
-      })
-      context.res.end();
-      return {
-        props: { none: "" }
-      }
+  if(!fs.existsSync(page + ".md")){
+    return {
+      props: {
+        error: true,
+        errorMessage: `Could not find "${path.relative(docsDir, page)}.md", the file may have been moved or deleted!`
+      },
+      revalidate: 1
     }
   }
+
   let mkdocsLocation: string;
 
   if (DOCS_DEV) {
@@ -199,20 +190,56 @@ export async function getServerSideProps(context: NextPageContext) {
 
   return {
     props: {
-      theme: {
-        pageTheme,
-        hljsStyle
-      },
       version: version,
       lang: lang,
       previous: previous ?? false,
-      current: current,
+      current: current ?? "",
       next: next ?? false,
       navs: yml,
       page: fs.readFileSync(page + ".md", 'utf-8'),
       verlang
     },
+    revalidate: 60
   }
+}
+
+export async function getStaticPaths() {
+  // let paths = [];
+  // let verlang: any = {};
+  // if (DOCS_DEV) {
+  //   verlang["0.00"] = ["en"];
+  // } else {
+  //   let docsdir = path.join(process.cwd(), 'docs');
+  //   let versionsInfo = fs.readdirSync(docsdir);
+  //   for (let version of versionsInfo) {
+  //     verlang[version] = fs.readdirSync(path.join(docsdir, version));
+  //
+  //     for (let lang of verlang[version]) {
+  //       let baseDir = path.join(docsdir, version, lang, "docs");
+  //       let files = await getFiles(baseDir);
+  //       files = files.filter(value => path.extname(value) === ".md").map(value => {
+  //         let newPath = path.relative(baseDir, value);
+  //         newPath = path.normalize(newPath.substring(0, newPath.lastIndexOf(path.extname(newPath))))
+  //         return newPath;
+  //       });
+  //       for (let file of files) {
+  //         paths.push({
+  //           params: {
+  //             version: version,
+  //             lang: lang,
+  //             slug: file.split("\\")
+  //           }
+  //         })
+  //       }
+  //     }
+  //   }
+  //
+  // }
+
+  return {
+    paths: [],
+    fallback: true
+  };
 }
 
 export default Page
