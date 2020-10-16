@@ -31,12 +31,12 @@ export default function SideNav({ version, lang, navs, current, verlang, stub = 
 
             <div className = {`flex-grow`}>
               {
-                navs && navs.map((keyval: any) => {
-                  if (typeof Object.values(keyval)[0] === "string") {
-                    let path = (Object.values(keyval)[0] as string).replace(/\.md/, "");
-                    return <NavItem version = {version ? version : ``} lang = {lang ? lang : ``} nav = {keyval} path = {path} selected = {current ? path === current.value : false} key = {`/${version}/${lang}/${path}`} level = {0}/>
+                navs && Object.keys(navs).map((key: any) => {
+                  if (typeof navs[key] === "string") {
+                    let path = navs[key].replace(/\.md/, "");
+                    return <NavItem version = {version ? version : ``} lang = {lang ? lang : ``} nav = {key} path = {path} selected = {current ? path === current.value : false} key = {`/${version}/${lang}/${path}`} level = {0}/>
                   } else {
-                    return <NavFolder version = {version ? version : ``} lang = {lang ? lang : ``} name = {Object.keys(keyval)[0]} nav = {Object.values(keyval)[0]} current = {current} key = {Object.keys(keyval)[0]} level = {0} parentExpanded = {true}/>
+                    return <NavFolder version = {version ? version : ``} lang = {lang ? lang : ``} name = {key} nav = {navs[key]} current = {current} key = {key} level = {0} parentExpanded = {true}/>
                   }
                 })
               }

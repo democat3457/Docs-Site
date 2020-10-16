@@ -43,7 +43,7 @@ export function getTheme(context: NextPageContext): Theme {
   return { pageTheme, hljsStyle }
 }
 
-export const walkYaml = function (doc: object[], done: NavObject[]) {
+export const walk = function (doc: object[], done: NavObject[]) {
 
   done = done || [];
 
@@ -54,7 +54,7 @@ export const walkYaml = function (doc: object[], done: NavObject[]) {
     }
     let val: any = doc[docKey];
     if (typeof val === "object") {
-      done = walkYaml(val, done);
+      done = walk(val, done);
     } else {
       done.push({ key: docKey, value: val });
     }

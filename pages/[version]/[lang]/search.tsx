@@ -174,29 +174,16 @@ export async function getServerSideProps(context: NextPageContext) {
   let docsDir = path.join(process.cwd(), 'docs');
   let versionDir = path.join(docsDir, version);
   let langDir = path.join(versionDir, lang);
-  // if (context.req && context.res) {
-  //   if (context.req.url && !context.req.url.endsWith("/") && context.req.url.indexOf(`?`) === -1) {
-  //     context.res.writeHead(301, {
-  //       Location: context.req.url + "/" + (search.length ? `?search=${search}` : ``),
-  //       // Add the content-type for SEO considerations
-  //       'Content-Type': 'text/html; charset=utf-8',
-  //     })
-  //     context.res.end();
-  //     return {
-  //       props: { slug: "search" }
-  //     }
-  //   }
-  // }
-  let mkdocsLocation: string;
+  let docsJsonLocation: string;
 
   if (DOCS_DEV) {
-    mkdocsLocation = path.join(path.join(process.cwd(), '../'), "mkdocs.yml");
+    docsJsonLocation = path.join(path.join(process.cwd(), '../'), "docs.json");
   } else {
-    mkdocsLocation = path.join(langDir, "mkdocs.yml");
+    docsJsonLocation = path.join(langDir, "docs.json");
   }
 
-  let mkdocs = fs.readFileSync(mkdocsLocation, "utf8");
-  let yml = yaml.parse(mkdocs)["nav"];
+  let docsJson = fs.readFileSync(docsJsonLocation, "utf8");
+  let docs = JSON.parse(docsJson)["nav"];
 
   let versionsInfo: string[];
   let verlang: any = {};
@@ -217,7 +204,7 @@ export async function getServerSideProps(context: NextPageContext) {
       },
       version: version,
       lang: lang,
-      navs: yml,
+      navs: docs,
       verlang,
     },
   }

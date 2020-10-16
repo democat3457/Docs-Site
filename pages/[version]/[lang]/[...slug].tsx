@@ -9,7 +9,7 @@ import Content from "../../../components/Content";
 import Layout from "../../../components/layout";
 import SideNav from "../../../components/SideNav";
 import { NavObject, PageProps } from "../../../utils/Interfaces";
-import { DOCS_DEV, SITE_DEV, walkYaml } from "../../../utils/Utils";
+import { DOCS_DEV, SITE_DEV, walk } from "../../../utils/Utils";
 import dynamic from "next/dynamic";
 import { Router, useRouter } from "next/router";
 import { NextSeo } from "next-seo";
@@ -144,19 +144,19 @@ export async function getStaticProps({ params }: any) {
     }
   }
 
-  let mkdocsLocation: string;
+  let docsJsonLocation: string;
 
   if (DOCS_DEV) {
-    mkdocsLocation = path.join(path.join(process.cwd(), '../'), "mkdocs.yml");
+    docsJsonLocation = path.join(path.join(process.cwd(), '../'), "docs.json");
   } else {
-    mkdocsLocation = path.join(langDir, "mkdocs.yml");
+    docsJsonLocation = path.join(langDir, "docs.json");
   }
 
-  let mkdocs = fs.readFileSync(mkdocsLocation, "utf8");
-  let yml = yaml.parse(mkdocs)["nav"];
+  let docsJson = fs.readFileSync(docsJsonLocation, "utf8");
+  let docs = JSON.parse(docsJson)["nav"];
 
 
-  let filePaths = walkYaml(yml, []);
+  let filePaths = walk(docs, []);
   let previous: (NavObject | undefined) = undefined;
   let current: (NavObject | undefined) = undefined;
   let next: (NavObject | undefined) = undefined;
@@ -195,7 +195,7 @@ export async function getStaticProps({ params }: any) {
       previous: previous ?? false,
       current: current ?? "",
       next: next ?? false,
-      navs: yml,
+      navs: docs,
       page: fs.readFileSync(page + ".md", 'utf-8'),
       verlang
     },
@@ -204,37 +204,6 @@ export async function getStaticProps({ params }: any) {
 }
 
 export async function getStaticPaths() {
-  // let paths = [];
-  // let verlang: any = {};
-  // if (DOCS_DEV) {
-  //   verlang["0.00"] = ["en"];
-  // } else {
-  //   let docsdir = path.join(process.cwd(), 'docs');
-  //   let versionsInfo = fs.readdirSync(docsdir);
-  //   for (let version of versionsInfo) {
-  //     verlang[version] = fs.readdirSync(path.join(docsdir, version));
-  //
-  //     for (let lang of verlang[version]) {
-  //       let baseDir = path.join(docsdir, version, lang, "docs");
-  //       let files = await getFiles(baseDir);
-  //       files = files.filter(value => path.extname(value) === ".md").map(value => {
-  //         let newPath = path.relative(baseDir, value);
-  //         newPath = path.normalize(newPath.substring(0, newPath.lastIndexOf(path.extname(newPath))))
-  //         return newPath;
-  //       });
-  //       for (let file of files) {
-  //         paths.push({
-  //           params: {
-  //             version: version,
-  //             lang: lang,
-  //             slug: file.split("\\")
-  //           }
-  //         })
-  //       }
-  //     }
-  //   }
-  //
-  // }
 
   return {
     paths: [],
