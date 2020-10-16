@@ -199,7 +199,7 @@ export async function getStaticProps({ params }: any) {
       page: fs.readFileSync(page + ".md", 'utf-8'),
       verlang
     },
-    revalidate: 60
+    revalidate: 1
   }
 }
 

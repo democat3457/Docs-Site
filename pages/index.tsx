@@ -177,6 +177,6 @@ export async function getStaticProps(context: NextPageContext) {
     props: {
       verlang
     },
-    revalidate: 60
+    revalidate: 1
   }
 }
