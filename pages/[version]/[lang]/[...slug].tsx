@@ -10,7 +10,7 @@ import Layout from "../../../components/layout";
 import SideNav from "../../../components/SideNav";
 import { NavObject, PageProps, PageQuery } from "../../../utils/Interfaces";
 import { NextPageContext } from "next";
-import { DOCS_DEV, getTheme, SITE_DEV, walkYaml } from "../../../utils/Utils";
+import { DOCS_DEV, getTheme, SITE_DEV, walk } from "../../../utils/Utils";
 import dynamic from "next/dynamic";
 import { Router } from "next/router";
 import { NextSeo } from "next-seo";
@@ -132,17 +132,6 @@ export async function getServerSideProps(context: NextPageContext) {
         props: { slug: slug }
       }
     }
-    if (context.req.url && !context.req.url.endsWith("/") && !context.req.url.endsWith(".json")) {
-      context.res.writeHead(301, {
-        Location: context.req.url + "/",
-        // Add the content-type for SEO considerations
-        'Content-Type': 'text/html; charset=utf-8',
-      })
-      context.res.end();
-      return {
-        props: { slug: slug }
-      }
-    }
     if (!fs.existsSync(page + ".md")) {
       context.res.writeHead(404, {
         'Content-Type': 'text/html; charset=utf-8',
@@ -153,19 +142,19 @@ export async function getServerSideProps(context: NextPageContext) {
       }
     }
   }
-  let mkdocsLocation: string;
+  let docsJsonLocation: string;
 
   if (DOCS_DEV) {
-    mkdocsLocation = path.join(path.join(process.cwd(), '../'), "mkdocs.yml");
+    docsJsonLocation = path.join(path.join(process.cwd(), '../'), "docs.json");
   } else {
-    mkdocsLocation = path.join(langDir, "mkdocs.yml");
+    docsJsonLocation = path.join(langDir, "docs.json");
   }
 
-  let mkdocs = fs.readFileSync(mkdocsLocation, "utf8");
-  let yml = yaml.parse(mkdocs)["nav"];
+  let docsJson = fs.readFileSync(docsJsonLocation, "utf8");
+  let docs = JSON.parse(docsJson)["nav"];
 
 
-  let filePaths = walkYaml(yml, []);
+  let filePaths = walk(docs, []);
   let previous: (NavObject | undefined) = undefined;
   let current: (NavObject | undefined) = undefined;
   let next: (NavObject | undefined) = undefined;
@@ -208,7 +197,7 @@ export async function getServerSideProps(context: NextPageContext) {
       previous: previous ?? false,
       current: current,
       next: next ?? false,
-      navs: yml,
+      navs: docs,
       page: fs.readFileSync(page + ".md", 'utf-8'),
       verlang
     },

@@ -2,13 +2,13 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import NavItem from "./NavItem";
 import { NavFolderProps } from "../utils/Interfaces";
-import { walkYaml } from "../utils/Utils";
+import { walk } from "../utils/Utils";
 
 function NavFolder({ theme, version, lang, name, current, nav, level, parentExpanded }: NavFolderProps) {
 
   const [expanded, setExpanded] = useState(false);
   useEffect(() => {
-    let yml = walkYaml(nav, []);
+    let yml = walk(nav, []);
     for (let ymlKey in yml) {
       if (current.value + ".md" === yml[ymlKey].value) {
         setExpanded(true);
@@ -36,14 +36,16 @@ function NavFolder({ theme, version, lang, name, current, nav, level, parentExpa
         className = {`overflow-hidden`}
       >
         <div>
-          {Object.values(nav).map((keyval: any) => {
-            if (typeof Object.values(keyval)[0] === "string") {
-              let path = (Object.values(keyval)[0] as string).replace(/\.md/, "");
-              return <NavItem version = {version} lang = {lang} nav = {keyval} path = {path} selected = {path === current.value} key = {`/${version}/${lang}/${path}`} level = {level + 1}/>
-            } else {
-              return <NavFolder theme = {theme} version = {version} lang = {lang} current = {current} name = {Object.keys(keyval)[0]} nav = {Object.values(keyval)[0]} key = {JSON.stringify(Object.keys(keyval))} level = {level + 1} parentExpanded = {expanded}/>
-            }
-          })}
+          {
+            nav && Object.keys(nav).map((key: any) => {
+              if (typeof nav[key] === "string") {
+                let path = nav[key].replace(/\.md/, "");
+                return <NavItem version = {version ? version : ``} lang = {lang ? lang : ``} nav = {key} path = {path} selected = {current ? path === current.value : false} key = {`/${version}/${lang}/${path}`} level = {level + 1}/>
+              } else {
+                return <NavFolder theme={theme} version = {version ? version : ``} lang = {lang ? lang : ``} name = {key} nav = {nav[key]} current = {current} key = {key} level = {level + 1} parentExpanded = {true}/>
+              }
+            })
+          }
         </div>
       </motion.div>
     </div>

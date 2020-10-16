@@ -163,15 +163,15 @@ export async function getServerSideProps(context: NextPageContext) {
       }
     }
   }
-  let mkdocsLocation: string;
+  let docsJsonLocation: string;
 
   if (DOCS_DEV) {
-    mkdocsLocation = path.join(path.join(process.cwd(), '../'), "mkdocs.yml");
+    docsJsonLocation = path.join(path.join(process.cwd(), '../'), "mkdocs.yml");
   } else {
-    mkdocsLocation = path.join(langDir, "mkdocs.yml");
+    docsJsonLocation = path.join(langDir, "mkdocs.yml");
   }
 
-  let mkdocs = fs.readFileSync(mkdocsLocation, "utf8");
+  let mkdocs = fs.readFileSync(docsJsonLocation, "utf8");
   let yml = yaml.parse(mkdocs)["nav"];
 
   let versionsInfo: string[];
