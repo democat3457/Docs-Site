@@ -17,7 +17,7 @@ import { NextSeo } from "next-seo";
 
 const DisplayAd = dynamic(() => import('../../../components/ads/DisplayAd'), { ssr: false })
 
-const Page = ({ theme, version, lang, previous, current, next, navs, page, verlang }: PageProps) => {
+const Page = ({ theme, version, lang, previous, current, next, navs, page, verlang, parentFolders }: PageProps) => {
   const [showingNav, setShowingNav] = useState(false);
   useEffect(() => {
     setShowingNav(false);
@@ -77,7 +77,7 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
 
       <div className = "flex flex-row">
 
-        <SideNav version = {version} lang = {lang} navs = {navs} current = {current} verlang = {verlang} stub = {false} showingNav = {showingNav}/>
+        <SideNav version = {version} lang = {lang} navs = {navs} current = {current} verlang = {verlang} stub = {false} showingNav = {showingNav} parentFolders={parentFolders}/>
 
         <div className = {`w-full md:w-content`}>
           <SimpleBar className = {`mx-auto max-h-with-nav w-full`} ref = {simpleBarRef}>
@@ -143,21 +143,27 @@ export async function getServerSideProps(context: NextPageContext) {
     }
   }
   let docsJsonLocation: string;
+  let docsJsonReversedLocation: string;
 
   if (DOCS_DEV) {
     docsJsonLocation = path.join(path.join(process.cwd(), '../'), "docs.json");
+    docsJsonReversedLocation = path.join(path.join(process.cwd(), '../'), "docs_reverse_lookup.json");
   } else {
     docsJsonLocation = path.join(langDir, "docs.json");
+    docsJsonReversedLocation = path.join(langDir, "docs_reverse_lookup.json");
   }
 
   let docsJson = fs.readFileSync(docsJsonLocation, "utf8");
+  let docsJsonReversed = fs.readFileSync(docsJsonReversedLocation, "utf8");
   let docs = JSON.parse(docsJson)["nav"];
-
+  let docsReversed = JSON.parse(docsJsonReversed);
 
   let filePaths = walk(docs, []);
   let previous: (NavObject | undefined) = undefined;
   let current: (NavObject | undefined) = undefined;
   let next: (NavObject | undefined) = undefined;
+
+  let parentFolders: string[] = [];
 
   filePaths.forEach(obj => {
     if (current && !next) {
@@ -168,6 +174,7 @@ export async function getServerSideProps(context: NextPageContext) {
     if (obj.value === slug.join("/") + ".md") {
       current = obj;
       current.value = current.value.replace(/\.md/, "");
+      parentFolders = docsReversed[current.value + ".md"] || [];
     }
     if (!current) {
       previous = obj;
@@ -199,6 +206,7 @@ export async function getServerSideProps(context: NextPageContext) {
       next: next ?? false,
       navs: docs,
       page: fs.readFileSync(page + ".md", 'utf-8'),
+      parentFolders,
       verlang
     },
   }

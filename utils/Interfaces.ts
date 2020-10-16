@@ -48,6 +48,8 @@ export interface NavFolderProps extends HasVerAndLang, HasTheme, HasNav, HasLeve
   name: string
   current: any
   parentExpanded: boolean
+  parentNames: string[]
+  parentFolders: string[]
 }
 
 export interface LayoutProps extends HasChildren, HasTheme {
@@ -73,6 +75,7 @@ export interface PageProps extends HasVerAndLang, HasTheme, HasVerLang {
   next: NavObject
   navs: object
   page: string
+  parentFolders: string[]
 }
 
 export interface PageQuery extends HasVerAndLang {
@@ -87,6 +90,7 @@ export interface SearchProps extends HasVerAndLang, HasTheme, HasVerLang {
   navs: object
   search: string
   searchResults: SearchResults
+  parentFolders: string[]
 }
 
 export interface SearchResults {
@@ -103,6 +107,7 @@ export interface SideNavProps {
   verlang?: any
   stub: boolean
   showingNav: boolean
+  parentFolders: string[]
 }
 
 export interface TableCellProps extends HasChildren {

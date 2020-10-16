@@ -43,6 +43,27 @@ export function getTheme(context: NextPageContext): Theme {
   return { pageTheme, hljsStyle }
 }
 
+
+export const walkContaining = function (doc: object[], needle: string) {
+
+  for (let docKey in doc) {
+    if (!doc.hasOwnProperty(docKey)) {
+      // whatever webstorm
+      continue;
+    }
+    let val: any = doc[docKey];
+    if (typeof val === "object") {
+      if (walkContaining(val, needle)) {
+        return true;
+      }
+    } else {
+      if (val === needle) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
 export const walk = function (doc: object[], done: NavObject[]) {
 
   done = done || [];

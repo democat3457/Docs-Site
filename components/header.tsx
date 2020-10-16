@@ -7,9 +7,9 @@ function Header({ showingNav, setShowingNav }: HeaderProps) {
   return (
     <header>
       <nav className = "flex items-center justify-between flex-wrap bg-blue-800 h-16 shadow-lg z-20">
-        <Link href = {`/`} as = {`/`}>
+        {/*<Link href = {`/`} as = {`/`}>*/}
 
-          <a className = "flex items-center text-white mr-2 my-2 md:my-0">
+          <a href={"/"} className = "flex items-center text-white mr-2 my-2 md:my-0">
 
             <img className = "h-12 w-12 mx-2" src = "/crafttweaker.svg" alt = "crafttweaker_logo"/>
 
@@ -17,7 +17,7 @@ function Header({ showingNav, setShowingNav }: HeaderProps) {
 
           </a>
 
-        </Link>
+        {/*</Link>*/}
         <div className = "block md:hidden pr-6">
           <button className = "flex items-center px-2 py-1 border rounded text-gray-200 border-gray-400 hover:text-white hover:border-white" id = "menu-button" onClick = {() => {
             setShowingNav(!showingNav);

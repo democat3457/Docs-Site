@@ -15,7 +15,7 @@ import dynamic from "next/dynamic";
 import { NextSeo } from "next-seo";
 
 const DisplayAd = dynamic(() => import('../../..//components/ads/DisplayAd'), { ssr: false })
-const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: SearchProps) => {
+const Search = ({ theme, version, lang, navs, verlang, search, searchResults, parentFolders }: SearchProps) => {
   const [displayedSearch, setDisplayedSearch] = useState(search);
   const [showingNav, setShowingNav] = useState(false);
   const router = useRouter();
@@ -76,7 +76,7 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
         <SideNav version = {version} lang = {lang} navs = {navs} current = {{
           key: "search",
           value: "search"
-        }} verlang = {verlang} stub = {false} showingNav = {showingNav}/>
+        }} verlang = {verlang} stub = {false} showingNav = {showingNav} parentFolders={parentFolders}/>
         <div className = {`w-full md:w-content`}>
           <SimpleBar className = {`mx-auto max-h-with-nav w-full`} ref = {simpleBarRef}>
             <div className = {`grid grid-cols-1 lg:grid-cols-content`}>
@@ -104,9 +104,9 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
                   <div>
                     {searchResults.count > 0 ? searchResults.results.map((value, index) =>
 
-                      <Link href = {`/[version]/[lang]/[...slug]`} as = {(value.location.startsWith("/") ? value.location : `/${value.location}`).replace(/\.md/, "")} key = {`${index}`}>
+                      // <Link href = {`/[version]/[lang]/[...slug]`} as = {(value.location.startsWith("/") ? value.location : `/${value.location}`).replace(/\.md/, "")} key = {`${index}`}>
 
-                        <a className = {`px-2 block hover:bg-gray-400 dark-hover:bg-dark-700`}>
+                        <a href = {(value.location.startsWith("/") ? value.location : `/${value.location}`).replace(/\.md/, "")} className = {`px-2 block hover:bg-gray-400 dark-hover:bg-dark-700`}>
 
                           <div className = "py-1 pl-2">
                             <h2 className = "py-2 text-blue-700 dark:text-blue-300">
@@ -119,7 +119,7 @@ const Search = ({ theme, version, lang, navs, verlang, search, searchResults }: 
 
                         </a>
 
-                      </Link>
+                      // </Link>
                     ) : (searchResults.count === 0 ? <div>
                       <h4>No results found</h4></div> : <></>)}
                   </div>
@@ -164,15 +164,19 @@ export async function getServerSideProps(context: NextPageContext) {
     }
   }
   let docsJsonLocation: string;
+  let docsJsonReversedLocation: string;
 
   if (DOCS_DEV) {
-    docsJsonLocation = path.join(path.join(process.cwd(), '../'), "mkdocs.yml");
+    docsJsonLocation = path.join(path.join(process.cwd(), '../'), "docs.json");
+    docsJsonReversedLocation = path.join(path.join(process.cwd(), '../'), "docs_reverse_lookup.json");
   } else {
-    docsJsonLocation = path.join(langDir, "mkdocs.yml");
+    docsJsonLocation = path.join(langDir, "docs.json");
+    docsJsonReversedLocation = path.join(langDir, "docs_reverse_lookup.json");
   }
 
-  let mkdocs = fs.readFileSync(docsJsonLocation, "utf8");
-  let yml = yaml.parse(mkdocs)["nav"];
+  let docsJson = fs.readFileSync(docsJsonLocation, "utf8");
+  let docsJsonReversed = fs.readFileSync(docsJsonReversedLocation, "utf8");
+  let docs = JSON.parse(docsJson)["nav"];
 
   let versionsInfo: string[];
   let verlang: any = {};
@@ -205,9 +209,10 @@ export async function getServerSideProps(context: NextPageContext) {
       },
       version: version,
       lang: lang,
-      navs: yml,
+      navs: docs,
       verlang,
       search,
+      parentFolders: [],
       searchResults
     },
   }

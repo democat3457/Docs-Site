@@ -2,47 +2,76 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import NavItem from "./NavItem";
 import { NavFolderProps } from "../utils/Interfaces";
-import { walk } from "../utils/Utils";
 
-function NavFolder({ theme, version, lang, name, current, nav, level, parentExpanded }: NavFolderProps) {
+function NavFolder({ theme, version, lang, name, current, nav, level, parentExpanded, parentNames, parentFolders }: NavFolderProps) {
 
-  const [expanded, setExpanded] = useState(false);
-  useEffect(() => {
-    let yml = walk(nav, []);
-    for (let ymlKey in yml) {
-      if (current.value + ".md" === yml[ymlKey].value) {
-        setExpanded(true);
-        return;
+  let parentCurrent = parentNames.concat(name);
+  let isexpanded = true;
+  if (parentCurrent.length > parentFolders.length) {
+    isexpanded = false;
+  } else {
+    for (let i = 0; i < parentCurrent.length; i++) {
+      let currentValue = parentCurrent[i];
+      let folderValue = parentFolders[i];
+      if (currentValue !== folderValue) {
+        isexpanded = false;
       }
     }
-    setExpanded(false);
-  }, [current]);
+  }
+
+  const [expanded, setExpanded] = useState(isexpanded);
+  const [loaded, setLoaded] = useState(false);
+
+
+
+  // useEffect(() => {
+  //   let parentCurrent = parentNames.concat(name);
+  //   let expanded = true;
+  //   if (parentCurrent.length > parentFolders.length) {
+  //     expanded = false;
+  //   } else {
+  //     for (let i = 0; i < parentCurrent.length; i++) {
+  //       let currentValue = parentCurrent[i];
+  //       let folderValue = parentFolders[i];
+  //       if (currentValue !== folderValue) {
+  //         expanded = false;
+  //       }
+  //     }
+  //   }
+  //   setExpanded(expanded);
+  //   setLoaded(true);
+  // }, [current]);
 
   if (!parentExpanded) {
     return <> </>
   }
   return <>
     <div>
-    <span onClick = {() => {
+    <span onClick={() => {
       setExpanded(!expanded);
-    }} className = {`cursor-pointer pr-2 py-1 block hover:bg-gray-400 dark-hover:bg-dark-600 ${expanded ? `${theme.pageTheme === "dark" ? `nav-open-dark` : `nav-open`}` : `${theme.pageTheme === "dark" ? `nav-closed-dark` : `nav-closed`}`}`} style = {{ paddingLeft: `${level + 1}rem` }}>{name.replace("&#58;", ":")}</span>
+    }}
+          className={`cursor-pointer pr-2 py-1 block hover:bg-gray-400 dark-hover:bg-dark-600 ${expanded ? `${theme.pageTheme === "dark" ? `nav-open-dark` : `nav-open`}` : `${theme.pageTheme === "dark" ? `nav-closed-dark` : `nav-closed`}`}`}
+          style={{ paddingLeft: `${level + 1}rem` }}>{name.replace("&#58;", ":")}</span>
       <motion.div
-        initial = {{
+        initial={{
           height: expanded ? "100%" : 0
         }}
-        animate = {{
+        animate={{
           height: expanded ? "100%" : 0,
         }}
-        className = {`overflow-hidden`}
+        className={`overflow-hidden`}
       >
         <div>
           {
             nav && Object.keys(nav).map((key: any) => {
               if (typeof nav[key] === "string") {
                 let path = nav[key].replace(/\.md/, "");
-                return <NavItem version = {version ? version : ``} lang = {lang ? lang : ``} nav = {key} path = {path} selected = {current ? path === current.value : false} key = {`/${version}/${lang}/${path}`} level = {level + 1}/>
+                return <NavItem version={version ? version : ``} lang={lang ? lang : ``} nav={key} path={path}
+                                selected={current ? path === current.value : false} key={`/${version}/${lang}/${path}`} level={level + 1}/>
               } else {
-                return <NavFolder theme={theme} version = {version ? version : ``} lang = {lang ? lang : ``} name = {key} nav = {nav[key]} current = {current} key = {key} level = {level + 1} parentExpanded = {true}/>
+                return <NavFolder theme={theme} version={version ? version : ``} lang={lang ? lang : ``} name={key} nav={nav[key]} current={current}
+                                  key={key} level={level + 1} parentExpanded={true} parentNames={[...parentNames, name]}
+                                  parentFolders={parentFolders}/>
               }
             })
           }
