@@ -1,5 +1,4 @@
-import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "preact/hooks";
 import SimpleBar from "simplebar-react";
 import Layout from "../components/layout";
 import fs from 'fs-extra';

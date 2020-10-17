@@ -1,4 +1,3 @@
-import React from "react";
 import { HasChildren } from "../../utils/Interfaces";
 
 export default function InlineCode({ children }: HasChildren) {

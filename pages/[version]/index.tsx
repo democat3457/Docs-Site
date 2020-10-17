@@ -1,4 +1,3 @@
-import React from "react";
 import { NextPageContext } from "next";
 
 export default function Index() {

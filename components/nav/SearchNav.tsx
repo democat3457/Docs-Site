@@ -1,8 +1,7 @@
 import { DebounceInput } from "react-debounce-input";
 import axios from "axios";
 import { motion } from "framer-motion";
-import Link from "next/link";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "preact/hooks";
 import { HasVerAndLang, SearchResults } from "../../utils/Interfaces";
 import { DOCS_DEV } from "../../utils/Utils";
 

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 import { NavItemProps } from "../utils/Interfaces";
 
 export default function NavItem({ version, lang, path, selected, nav, level }: NavItemProps) {

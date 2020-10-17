@@ -1,4 +1,3 @@
-import React from "react";
 import Patreon from "../icons/Patreon";
 import Github from "../icons/Github";
 import Discord from "../icons/Discord";

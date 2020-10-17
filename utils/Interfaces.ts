@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 declare global {
   interface Window {
     GA_INITIALIZED: boolean;
@@ -41,7 +39,7 @@ export interface HeaderProps {
 }
 
 export interface HeadingProps extends HasChildren, HasLevel {
-  children: ReactNode[]
+  children: any[]
 }
 
 export interface NavFolderProps extends HasVerAndLang, HasTheme, HasNav, HasLevel {
@@ -125,7 +123,7 @@ export interface VerLangsProps extends HasVerAndLang, HasVerLang {
 }
 
 export interface HasChildren {
-  children: ReactNode | ReactNode[]
+  children: any | any[]
 }
 
 export interface HasVerAndLang {

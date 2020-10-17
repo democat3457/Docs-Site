@@ -1,11 +1,11 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "preact/hooks";
 import Header from "./header";
-import Head from "next/head";
 import { LayoutProps } from "../utils/Interfaces";
 import { initGA, pageView } from "../utils/Analytics";
+import { createContext } from "preact";
 
-export const ThemeContext = React.createContext({
+export const ThemeContext = createContext({
   pageTheme: "light",
   hljsStyle: "default",
   setTheme: (pageTheme: string, style: string) => {

@@ -1,10 +1,8 @@
 import fs from 'fs-extra';
 import path from 'path'
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "preact/hooks";
 import SimpleBar from 'simplebar-react';
-import yaml from 'yaml';
 import Layout from "../../../components/layout";
-import Link from "next/link";
 import { SearchPageQuery, SearchProps, SearchResults } from "../../../utils/Interfaces";
 import { NextPageContext } from "next";
 import { DOCS_DEV, getTheme } from "../../../utils/Utils";

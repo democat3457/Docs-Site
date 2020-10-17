@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import React from "react";
 import { VerLangsProps } from "../../utils/Interfaces";
 
 export default function VerLangs({ verlang, version, lang, stub, current }: VerLangsProps) {

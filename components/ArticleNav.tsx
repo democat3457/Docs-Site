@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import  { useContext } from "preact/hooks";
 import Link from "next/link";
 import { ThemeContext } from "./layout";
 import { ArticleNavProps } from "../utils/Interfaces";

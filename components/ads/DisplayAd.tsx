@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "preact/hooks";
 import { AdProps } from "../../utils/Interfaces";
 import { matchesMedia } from "../../utils/Utils";
 
