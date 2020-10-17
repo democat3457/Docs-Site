@@ -1,7 +1,8 @@
 import fs from 'fs-extra';
 import path from 'path'
-import { useEffect, useRef, useState } from "preact/hooks";
+import React, { useEffect, useRef, useState } from "react";
 import SimpleBar from 'simplebar-react';
+import yaml from 'yaml';
 
 import ArticleNav from "../../../components/ArticleNav";
 import Content from "../../../components/Content";
@@ -44,13 +45,13 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
     };
   }, []);
   return (
-    <Layout theme={theme} showingNav={showingNav} setShowingNav={setShowingNav} current={current}>
+    <Layout theme = {theme} showingNav = {showingNav} setShowingNav = {setShowingNav} current = {current}>
 
       <NextSeo
-        title={`${current.key} - CraftTweaker Documentation`}
-        description={`Documentation for the CraftTweaker Minecraft mod, information on how to use the ZenScript language and a central wiki for mods that rely on it.`}
-        canonical={`https://docs.blamejared.com/${version}/${lang}/${current.value}/`}
-        openGraph={{
+        title = {`${current.key} - CraftTweaker Documentation`}
+        description = {`Documentation for the CraftTweaker Minecraft mod, information on how to use the ZenScript language and a central wiki for mods that rely on it.`}
+        canonical = {`https://docs.blamejared.com/${version}/${lang}/${current.value}/`}
+        openGraph = {{
           type: `website`,
           url: `https://docs.blamejared.com/${version}/${lang}/${current.value}/`,
           title: `${current.key} - CraftTweaker Documentation`,
@@ -64,7 +65,7 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
             }
           ],
         }}
-        additionalMetaTags={[{
+        additionalMetaTags = {[{
           property: 'keywords',
           content: `CraftTweaker,CraftTweaker docs,CraftTweaker documentation,CraftTweaker wiki,CraftTweaker ${current.value},CraftTweaker Docs ${current.value},${current.value},CraftTweaker mod`
         }, {
@@ -74,29 +75,28 @@ const Page = ({ theme, version, lang, previous, current, next, navs, page, verla
       />
 
 
-      <div className="flex flex-row">
+      <div className = "flex flex-row">
 
-        <SideNav version={version} lang={lang} navs={navs} current={current} verlang={verlang} stub={false} showingNav={showingNav}
-                 parentFolders={parentFolders}/>
+        <SideNav version = {version} lang = {lang} navs = {navs} current = {current} verlang = {verlang} stub = {false} showingNav = {showingNav} parentFolders={parentFolders}/>
 
-        <div className={`w-full md:w-content`}>
-          <SimpleBar className={`mx-auto max-h-with-nav w-full`} ref={simpleBarRef}>
+        <div className = {`w-full md:w-content`}>
+          <SimpleBar className = {`mx-auto max-h-with-nav w-full`} ref = {simpleBarRef}>
 
-            <div className={`grid grid-cols-1 lg:grid-cols-content`}>
-              <div className={`flex flex-col justify-between`}>
-                {!SITE_DEV && <DisplayAd slot={`2785889097`} className={`md:mx-auto`} current={current}/>}
+            <div className = {`grid grid-cols-1 lg:grid-cols-content`}>
+              <div className = {`flex flex-col justify-between`}>
+                {!SITE_DEV && <DisplayAd slot = {`2785889097`} className = {`md:mx-auto`} current = {current}/>}
 
-                {!SITE_DEV && <DisplayAd slot={`4624233302`} className={`md:mx-auto`} mediaQuery={"(min-width: 768px)"} current={current}/>}
+                {!SITE_DEV && <DisplayAd slot = {`4624233302`} className = {`md:mx-auto`} mediaQuery = {"(min-width: 768px)"} current = {current}/>}
               </div>
-              <div className={`w-11/12 md:w-full pt-4 pb-16 px-4 mx-auto dark:text-dark-100`}>
-                <ArticleNav version={version} lang={lang} previous={previous} next={next}/>
-                <Content version={version} lang={lang} page={page}/>
-                <ArticleNav version={version} lang={lang} previous={previous} next={next}/>
+              <div className = {`w-11/12 md:w-full pt-4 pb-16 px-4 mx-auto dark:text-dark-100`}>
+                <ArticleNav version = {version} lang = {lang} previous = {previous} next = {next}/>
+                <Content version = {version} lang = {lang} page = {page}/>
+                <ArticleNav version = {version} lang = {lang} previous = {previous} next = {next}/>
               </div>
-              <div className={`flex flex-col justify-between`}>
-                {!SITE_DEV && <DisplayAd slot={`6866063899`} className={`md:mx-auto`} current={current}/>}
+              <div className = {`flex flex-col justify-between`}>
+                {!SITE_DEV && <DisplayAd slot = {`6866063899`} className = {`md:mx-auto`} current = {current}/>}
 
-                {!SITE_DEV && <DisplayAd slot={`5174542427`} className={`md:mx-auto`} mediaQuery={"(min-width: 768px)"} current={current}/>}
+                {!SITE_DEV && <DisplayAd slot = {`5174542427`} className = {`md:mx-auto`} mediaQuery = {"(min-width: 768px)"} current = {current}/>}
               </div>
             </div>
           </SimpleBar>

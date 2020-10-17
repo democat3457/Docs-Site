@@ -1,6 +1,7 @@
+import React, { ReactNode } from "react";
 import { HeadingProps } from "../../utils/Interfaces";
 
-function makeHeader(level: number, id: string, child: any[]) {
+function makeHeader(level: number, id: string, child: ReactNode[]) {
 
   switch (level) {
     case 1:

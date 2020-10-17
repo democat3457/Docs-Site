@@ -1,3 +1,4 @@
+import React from "react";
 import { TableCellProps } from "../../utils/Interfaces";
 
 export default function TableCell({ isHeader, children }: TableCellProps) {

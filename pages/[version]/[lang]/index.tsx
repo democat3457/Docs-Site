@@ -1,3 +1,4 @@
+import React from "react";
 import Page, { getServerSideProps as gssp } from "./[...slug]";
 import { NextPageContext } from "next";
 

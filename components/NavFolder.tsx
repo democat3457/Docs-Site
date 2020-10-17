@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "preact/hooks";
+import React, { useEffect, useState } from "react";
 import NavItem from "./NavItem";
 import { NavFolderProps } from "../utils/Interfaces";
 

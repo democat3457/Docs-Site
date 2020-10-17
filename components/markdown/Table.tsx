@@ -1,3 +1,4 @@
+import React from "react";
 import SimpleBar from "simplebar-react";
 import { HasChildren } from "../../utils/Interfaces";
 

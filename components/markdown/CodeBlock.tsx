@@ -1,4 +1,4 @@
-import { useContext } from "preact/hooks";
+import React, { useContext } from "react";
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 import {

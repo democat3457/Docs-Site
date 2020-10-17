@@ -1,4 +1,4 @@
-import { useContext } from "preact/hooks";
+import React, { useContext } from "react";
 import { ThemeContext } from "./layout";
 import NavFolder from "./NavFolder";
 import NavItem from "./NavItem";

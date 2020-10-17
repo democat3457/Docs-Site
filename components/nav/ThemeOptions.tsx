@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { listStyles } from "../markdown/CodeBlock";
 import { ThemeContext } from "../layout";
-import  { useContext, useState } from "preact/hooks";
+import React, { useContext, useState } from "react";
 
 export default function ThemeOptions() {
   const [themeOptionsOpen, setThemeOptionsOpen] = useState(false);

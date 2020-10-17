@@ -1,3 +1,4 @@
+import React from "react";
 
 export default function Github() {
   return <svg className = "inline" width = "14" height = "14" viewBox = "0 0 256 250" version = "1.1" xmlns = "http://www.w3.org/2000/svg" preserveAspectRatio = "xMidYMid">
