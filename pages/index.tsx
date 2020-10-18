@@ -10,6 +10,7 @@ import { DOCS_DEV, getTheme, SITE_DEV } from "../utils/Utils";
 import { HasTheme, HasVerLang } from "../utils/Interfaces";
 import dynamic from "next/dynamic";
 import { Router } from "next/router";
+import { NextSeo } from "next-seo";
 
 const DisplayAd = dynamic(() => import('../components/ads/DisplayAd'), { ssr: false })
 
@@ -28,6 +29,7 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
     }
     return `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/flags/4x3/${lang}.svg`
   }
+
   const simpleBarRef = useRef(null);
   useEffect(() => {
 
@@ -53,7 +55,6 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
   }, []);
 
 
-
   let [version, setVersion] = useState(Object.keys(verlang).sort((a, b) => b.localeCompare(a))[0]);
 
   const [showingNav, setShowingNav] = useState(false);
@@ -62,8 +63,37 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
       key: "CraftTweaker Documentation",
       value: "CraftTweaker Documentation"
     }}>
+
+      <NextSeo
+        title = {`CraftTweaker Documentation`}
+        description = {`Documentation for the CraftTweaker Minecraft mod, information on how to use the ZenScript language and a central wiki for mods that rely on it.`}
+        canonical = {`https://docs.blamejared.com/`}
+        openGraph = {{
+          type: `website`,
+          url: `https://docs.blamejared.com/`,
+          title: `CraftTweaker Documentation`,
+          description: `Documentation for the CraftTweaker Minecraft mod, information on how to use the ZenScript language and a central wiki for mods that rely on it.`,
+          images: [
+            {
+              url: `https://docs.blamejared.com/og_image.png`,
+              width: 90,
+              height: 92,
+              alt: `CraftTweaker logo`,
+            }
+          ],
+        }}
+        additionalMetaTags = {[{
+          property: 'keywords',
+          content: `CraftTweaker,CraftTweaker docs,CraftTweaker documentation,CraftTweaker wiki,CraftTweaker mod`
+        }, {
+          property: 'charset',
+          content: `utf-8`
+        }]}
+      />
+
+
       <div className = {`flex flex-row`}>
-        <SideNav stub = {true} showingNav = {showingNav}/>
+        <SideNav stub = {true} showingNav = {showingNav} parentFolders={[]}/>
         <div className = {`w-full md:w-content`}>
           <SimpleBar className = {`mx-auto max-h-with-nav w-full`} ref = {simpleBarRef}>
             <div className = "container mx-auto text-center mt-1 dark:text-dark-100">
@@ -83,14 +113,14 @@ export default function Index({ theme, verlang }: HasTheme & HasVerLang) {
 
                   {verlang[version].map((lang: string) => {
                     return <div className = {`border bg-gray-400 dark:bg-dark-800 dark:border-dark-700`} key = {`${lang}-${version}`}>
-                      <Link href = {`/[version]/[lang]/[...slug]`} as = {`/${version}/${lang}/index/`}>
+                      {/*<Link href = {`/[version]/[lang]/[...slug]`} as = {`/${version}/${lang}/index/`}>*/}
 
-                        <a> <img className = {`w-full`} src = {getFlag(lang)} alt = {lang}/>
+                        <a href = {`/${version}/${lang}/index/`}> <img className = {`w-full`} src = {getFlag(lang)} alt = {lang}/>
                           <p className = {`text-xl font-semibold mt-2`}>Version: {version}</p>
                           <p className = {`text-xl font-semibold mb-2`}>Language: {lang}</p>
                         </a>
 
-                      </Link>
+                      {/*</Link>*/}
 
                     </div>
                   })}
